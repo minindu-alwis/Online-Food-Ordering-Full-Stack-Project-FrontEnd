@@ -1,0 +1,121 @@
+/* Home.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+.banner {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .cover {
+    background: rgba(0, 0, 0, 0.5);
+    height: 100%;
+  }
+  
+  .fadout {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20%;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.8));
+  }
+  
+  .gallery {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .gallery img {
+    flex: 0 0 100%;
+    transition: transform 1s ease-in-out;
+  }
+  
+  .gallery img.active {
+    transform: translateX(0);
+  }
+  
+  .gallery img.next {
+    transform: translateX(100%);
+  }
+  
+  .gallery img.prev {
+    transform: translateX(-100%);
+  }
+
+  /* Home.css */
+.gallery img {
+    transition: opacity 1s ease-in-out;
+  }
+  
+  .text-overlay div {
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+  }
+
+  /* Add this to your CSS file */
+.slick-dots li button:before {
+    color: #fff; /* Change dot color */
+    font-size: 12px; /* Adjust dot size */
+  }
+  .slick-dots li.slick-active button:before {
+    color: #ff6347; /* Change active dot color */
+  }
+
+
+  /* Add this to your CSS file */
+.slick-prev:before,
+.slick-next:before {
+  color: #000; /* Change arrow color */
+  font-size: 24px; /* Adjust arrow size */
+}
+
+.text-overlay {
+    font-family: 'Poppins', 'Arial', sans-serif;
+  }
+  
+  .text-overlay h1 {
+    font-size: 2rem; /* 32px - Default size for larger screens */
+    font-weight: 700; /* Bold */
+    color: white;
+    margin-bottom: 1rem; /* 16px */
+  }
+  
+  .text-overlay p {
+    font-size: 1.25rem; /* 20px - Default size for larger screens */
+    font-weight: 500; /* Medium */
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  /* Responsive styles for smaller screens */
+  @media (max-width: 1024px) {
+    .text-overlay h1 {
+      font-size: 1.75rem; /* 28px - Adjust for tablets */
+    }
+  
+    .text-overlay p {
+      font-size: 1.125rem; /* 18px - Adjust for tablets */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .text-overlay h1 {
+      font-size: 1.5rem; /* 24px - Adjust for mobile devices */
+    }
+  
+    .text-overlay p {
+      font-size: 1rem; /* 16px - Adjust for mobile devices */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .text-overlay h1 {
+      font-size: 1.25rem; /* 20px - Adjust for very small screens */
+    }
+  
+    .text-overlay p {
+      font-size: 0.875rem; /* 14px - Adjust for very small screens */
+    }
+  }
