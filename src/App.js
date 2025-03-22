@@ -3,6 +3,7 @@ import './App.css';
 import { NavBar } from './component/NavBar/NavBar';
 import { darkTheme } from './Theme/DarkTheme';
 import { Home } from './component/Home/Home';
+import RestaurantDetails from './component/Restaurant/RestaurantDetails';
 
 function App() {
   return (
@@ -10,7 +11,8 @@ function App() {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline/>
       <NavBar/>
-      <Home/>
+      {/* <Home/> */}
+      <RestaurantDetails/>
       </ThemeProvider>
     </div>
   );
