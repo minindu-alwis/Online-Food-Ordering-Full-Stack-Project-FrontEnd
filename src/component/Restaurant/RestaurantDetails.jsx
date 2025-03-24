@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Label } from '@mui/icons-material';
+import MenuCard from './MenuCard';
 
 
 
@@ -16,6 +17,8 @@ const foodTypes=[
     {Label:"Non-Vegitarian",value:"non_vegitarian"},
     {Label:"Seasonal",value:"seasonal"}
 ]
+
+const menu=[1,1,1,1,1,1,1]
 
 const RestaurantDetails = () => {
 
@@ -95,8 +98,9 @@ const RestaurantDetails = () => {
 
             <div className='space-y-10 lg:w-[20%] filter'>
                 
-                <div className='box space-y-5 lg:sticky top-28'>
-                    <div>
+                <div className='box space-y-5 lg:sticky top-28  p-5 shadow-md'>
+                   
+                   <div>
                         <Typography variant='h5' sx={{paddingBottom:"1rem"}}>
                             Food Type
                         </Typography>
@@ -135,13 +139,18 @@ const RestaurantDetails = () => {
                     </div>
 
 
+               
+               
+                
                 </div>
-
-
             </div>
 
 
-            <div className='space-y-5 lg:w-[80%] lg:pl-10'>menu </div>
+            <div className='space-y-5 lg:w-[80%] lg:pl-10'>
+
+                {menu.map((item)=><MenuCard/>)}
+
+            </div>
 
         </section>
 
