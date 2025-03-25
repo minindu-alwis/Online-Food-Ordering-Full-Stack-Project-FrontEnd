@@ -6,17 +6,21 @@ import { Home } from './component/Home/Home';
 import RestaurantDetails from './component/Restaurant/RestaurantDetails';
 import Cart from './component/cart/Cart';
 import Profile from './component/Profile/Profile';
+import { CustomerRoute } from './Routers/CustomerRoute';
 
 function App() {
   return (
     <div className="App">
       <ThemeProvider theme={darkTheme}>
         <CssBaseline/>
-      <NavBar/>
+      {/* <NavBar/> */}
       {/* <Home/> */}
       {/* <RestaurantDetails/> */}
       {/* <Cart/> */}
-      <Profile/>
+      {/* <Profile/> */}
+
+      <CustomerRoute/>
+
       </ThemeProvider>
     </div>
   );
