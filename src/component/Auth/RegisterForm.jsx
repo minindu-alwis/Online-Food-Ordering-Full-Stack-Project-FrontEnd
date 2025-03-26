@@ -6,6 +6,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { useDispatch } from 'react-redux';
+import { registerUser } from '../State/Authentication/Action';
 
 const initialValues = {
     email: "",
@@ -17,9 +19,11 @@ const initialValues = {
 
 const RegisterForm = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleSubmit = (values) => {
         console.log("form values",values);
+        dispatch(registerUser({userData:values,navigate}))
     }
 
 
