@@ -3,6 +3,7 @@ import "./Home.css";
 import { MultiItemCarosal } from './MultiItemCarosal';
 import { topMeels } from './TopMeal';
 import RestaurantCard from '../Restaurant/RestaurantCard';
+import Auth from '../Auth/Auth';
 
 const restaurant = [1, 1, 1, 1, 1, 1, 1, 1]
 
@@ -96,6 +97,8 @@ export const Home = () => {
         </div>
 
       </section>
+
+      
 
     </div>
   );

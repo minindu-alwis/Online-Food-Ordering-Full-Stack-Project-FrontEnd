@@ -5,6 +5,7 @@ import { Home } from '../component/Home/Home'  // Fix: Use named import
 import RestaurantDetails from '../component/Restaurant/RestaurantDetails'
 import Cart from '../component/cart/Cart'
 import Profile from '../component/Profile/Profile'
+import Auth from '../component/Auth/Auth'
 
 export const CustomerRoute = () => {
   return (
@@ -17,6 +18,7 @@ export const CustomerRoute = () => {
             <Route path='/cart' element={<Cart/>}/>
             <Route path='/my-profile/*' element={<Profile/>}/>
         </Routes>
+        <Auth/>
     </div>
   )
 }

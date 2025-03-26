@@ -5,7 +5,10 @@ import UserProfile from './UserProfile';
 import Orders from './Orders';
 import Address from './Address';
 import {Events} from './Events';
-import { favorites } from './favorites';  
+import { Payments } from './Payments';
+import { Favourites } from './Favourites';
+
+ 
 
 
 
@@ -25,8 +28,10 @@ const Profile = () => {
                 <Route path='/' element={<UserProfile/>}/>
                 <Route path='/orders' element={<Orders/>}/>
                 <Route path='/address' element={<Address/>}/>
-                <Route path='/favorites' element={<favorites/>}/>
+                <Route path='/favourites' element={<Favourites/>}/>
                 <Route path='/events' element={<Events/>}/>
+                <Route path='/payments' element={<Payments/>}/>
+
                 
                 
             </Routes>
