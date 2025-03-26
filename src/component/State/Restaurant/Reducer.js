@@ -1,5 +1,5 @@
 import { use } from 'react';
-import * as actionTypes from './ActionTypes';
+import * as actionTypes from './ActionType';
 
 const initialState = {
     restaurants: [],
@@ -120,7 +120,7 @@ const restaurantReducer = (state = initialState, action) => {
         case actionTypes.DELETE_RESTAURANT_FAILURE:
         case actionTypes.UPDATE_RESTAURANT_FAILURE:
         case actionTypes.GET_RESTAURANT_BY_ID_FAILURE:
-        case actionTypes.CREATE_EVENTS_FAILURE:
+        case actionTypes.CREATE_EVENT_FAILURE:
         case actionTypes.CREATE_CATEGORY_FAILURE:
         case actionTypes.GET_RESTAURANTS_CATEGORY_FAILURE:
             return {
