@@ -24,52 +24,63 @@ export const registerUser=(reqData)=>async(dispatch)=>{
 
 }
 
-
-export const loginUser=(reqData)=>async(dispatch)=>{
-    dispatch({type:LOGIN_REQUEST});
+export const loginUser = (reqData) => async (dispatch) => {
+    dispatch({ type: LOGIN_REQUEST });
     try {
-       const {data}=await axios.post(`${API_URL}/auth/signin`,reqData.userData);
-        if(data.jwt)localStorage.setItem('jwt',data.jwt);
-        if(data.role==="ROLE_RESTAURANT_OWNER"){
-            reqData.navigate("/admin/restaurants");
+        const { data } = await axios.post(`${API_URL}/auth/signin`, reqData.userData);
+        
+        if (data.jwt) {
+            localStorage.setItem('jwt', data.jwt);
+            // Store the JWT in Redux state too
+            dispatch({ type: LOGIN_SUCCESS, payload: data.jwt }); // Only store JWT string
         }
-        else{
+
+        // Navigation logic
+        if (data.role === "ROLE_RESTAURANT_OWNER") {
+            reqData.navigate("/admin/restaurants");
+        } else {
             reqData.navigate("/");
         }
-        dispatch({type:LOGIN_SUCCESS,payload:data});
-        console.log("Login success",data);
-        
+
+        // Now fetch user profile with the JWT
+        dispatch(getUser(data.jwt));
 
     } catch (error) {
-        dispatch({type:LOGIN_FAILURE,payload:error});
-       console.log("error",error);
-       
+        dispatch({ type: LOGIN_FAILURE, payload: error.message });
+        console.error("Login error:", error);
     }
-
 }
 
-export const getUser = (jwt) => async (dispatch) => {
+export const getUser = () => async (dispatch, getState) => {
     dispatch({ type: GET_USER_REQUEST });
     try {
-        if (!jwt) {
-            throw new Error("No JWT token provided");
+        // Get JWT from Redux state first, fallback to localStorage
+        const { jwt } = getState().auth;
+        const token = jwt || localStorage.getItem('jwt');
+        
+        if (!token) {
+            throw new Error("No JWT token available");
         }
 
         const { data } = await api.get(`/api/users/profile`, {
             headers: {
-                Authorization: `Bearer ${jwt}`  // Fixed typo
+                Authorization: `Bearer ${token}`
             }
         });
 
         dispatch({ type: GET_USER_SUCCESS, payload: data });
-        console.log("user profile", data);
 
     } catch (error) {
-        console.error("Error fetching user profile:", error);
+        console.error("Profile fetch error:", error.response?.data || error.message);
         dispatch({ 
             type: GET_USER_FAILURE, 
             payload: error.response?.data?.message || error.message 
         });
+        
+        // Optional: Clear invalid token
+        if (error.response?.status === 401 || error.response?.status === 403) {
+            localStorage.removeItem('jwt');
+        }
     }
 }
 
