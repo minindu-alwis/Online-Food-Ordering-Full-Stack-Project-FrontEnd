@@ -4,8 +4,11 @@ import { MultiItemCarosal } from './MultiItemCarosal';
 import { topMeels } from './TopMeal';
 import RestaurantCard from '../Restaurant/RestaurantCard';
 import Auth from '../Auth/Auth';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllRestaurantsAction } from '../State/Restaurant/Action';
 
-const restaurant = [1, 1, 1, 1, 1, 1, 1, 1]
+
+const restaurants = [1, 1, 1, 1, 1, 1, 1, 1]
 
 const texts = [
   "Savor the Flavor, Anytime, Anywhere!",
@@ -26,6 +29,19 @@ const texts = [
 ];
 
 export const Home = () => {
+
+  const dispatch =useDispatch();
+  const jwt=localStorage.getItem("jwt");
+  const {restaurant}=useSelector(store=>store)
+
+  console.log("restaurant",restaurant); 
+  
+
+
+  useEffect(() => {
+    dispatch(getAllRestaurantsAction(jwt));
+  }, []);
+
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
   useEffect(() => {
@@ -91,7 +107,7 @@ export const Home = () => {
         <div className='flex flex-wrap items-center justify-around gap-5'>
 
           {
-            restaurant.map((item) => <RestaurantCard />)
+            restaurant.restaurants.map((item) => <RestaurantCard item={item}/>)
           }
 
         </div>

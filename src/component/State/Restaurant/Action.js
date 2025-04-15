@@ -1,5 +1,4 @@
-import {api} from '../../../config/api';
-
+import { api } from "../../config/api";
 import { 
     CREATE_RESTAURANT_REQUEST, CREATE_RESTAURANT_SUCCESS, CREATE_RESTAURANT_FAILURE, 
     GET_ALL_RESTAURANT_REQUEST, GET_ALL_RESTAURANT_SUCCESS, GET_ALL_RESTAURANT_FAILURE, 
@@ -46,7 +45,7 @@ export const getRestaurantById = (reqData) => {
                 },
             });
             dispatch({type:GET_RESTAURANT_BY_ID_SUCCESS,payload:response.data});
-            console.log("restaurant by id",data);
+            console.log("restaurant by id", response.data);
             
         } catch (error) {
             console.log("catch error",error);
@@ -65,8 +64,8 @@ export const getRestaurantByUserId = (jwt) => {
                     Authorization: `Bearer ${jwt}`,
                 },
             });
-            dispatch({type:GET_RESTAURANT_BY_USER_ID_SUCCESS,payload:data});
-            console.log("restaurant by user id",data);
+            dispatch({type:GET_RESTAURANT_BY_USER_ID_SUCCESS,payload:response.data});
+            console.log("restaurant by user id", response.data);
             
         } catch (error) {
             console.log("catch error",error);
@@ -111,7 +110,7 @@ export const updateRestaurant = ({restaurantId,restaurantData,jwt}) => {
             });
 
             dispatch({type:UPDATE_RESTAURANT_SUCCESS,payload:res.data});
-            console.log("restaurant updated",data);
+            console.log("restaurant updated", res.data);
             
         } catch (error) {
             console.log("catch error",error);
@@ -131,7 +130,7 @@ export const deleteRestaurant = ({restaurantId,jwt}) => {
             });
 
             dispatch({type:DELETE_RESTAURANT_SUCCESS,payload:restaurantId});
-            console.log("restaurant deleted",data);
+            console.log("restaurant deleted", res.data);
             
         } catch (error) {
             console.log("catch error",error);
@@ -151,7 +150,7 @@ export const updateRestaurantStatus = ({restaurantId,jwt}) => {
             });
 
             dispatch({type:UPDATE_RESTAURANT_STATUS_SUCCESS,payload:res.data});
-            console.log("restaurant status updated",data);
+            console.log("restaurant status updated", res.data);
             
         } catch (error) {
             console.log("catch error",error);
