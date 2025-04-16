@@ -37,14 +37,16 @@ export const authReducer = (state = initialState, action) => {
                  };     
 
 
-        case ADD_TO_FAVORITE_SUCCESS:
-            return { ...state, isLoading: false, 
-                error: null,
-                favorite:isPresentInFavorites(state.favorite,action.payload)
-                ?state.favorite.filter((item)=>item.id!==action.payload.id) 
-                :[action.payload,...state.favorite]
-             }
-
+       // In your auth reducer
+case ADD_TO_FAVORITE_SUCCESS:
+    return { 
+        ...state, 
+        isLoading: false, 
+        error: null,
+        favorites: isPresentInFavorites(state.favorites, action.payload) // Changed to 'favorites'
+            ? state.favorites.filter((item) => item.id !== action.payload.id) 
+            : [action.payload, ...state.favorites] // Changed to 'favorites'
+    }
 
             case LOGOUT:
                 return initialState;
