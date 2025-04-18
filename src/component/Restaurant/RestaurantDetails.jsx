@@ -1,9 +1,12 @@
 import { Divider, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Label } from '@mui/icons-material';
 import MenuCard from './MenuCard';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRestaurantById } from '../State/Restaurant/Action';
 
 
 
@@ -23,9 +26,24 @@ const menu=[1,1,1,1,1,1,1]
 const RestaurantDetails = () => {
 
     const [foodType,setFoodType]=useState("all");
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem('jwt');
+    const { auth,restaurant } = useSelector((store) => store);
+
+
+    const {id,city}=useParams();  
+
     const handleFilter=(e)=>{
         console.log(e.target.value,e.target.name)
     }
+    console.log("restaurant",restaurant);
+
+    useEffect(()=>{
+        dispatch(getRestaurantById({jwt,restaurantId:id}))
+    },[])
+
 
     return (
         <div className='px-5 lg:px-20'>
@@ -35,18 +53,22 @@ const RestaurantDetails = () => {
                 <div>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <img className='w-full h-[40vh] object-cover' src="https://media.gettyimages.com/id/1829241109/photo/enjoying-a-brunch-together.jpg?s=612x612&w=gi&k=20&c=SFRYlKrWD84RMNV_c8fIliBep7WHoV-0s6IBc5FJsmE="
+                            <img className='w-full h-[40vh] object-cover' src=
+                            {restaurant.restaurant?.images[0]}
                                 alt="" />
                         </Grid>
 
                         <Grid item xs={12} lg={6}>
-                            <img className='w-full h-[40vh] object-cover' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHgwWivilxxH1eAitAAZhuVpA-UV8ldD3VWg&s"
+                            <img className='w-full h-[40vh] object-cover' src=
+                            
+                            {restaurant.restaurant?.images[0]}
                                 alt="" />
                         </Grid>
 
 
                         <Grid item xs={12} lg={6}>
-                            <img className='w-full h-[40vh] object-cover' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV3V_QmFRmB8xPPSOmShms0tMMMAH1G9i7pg&s"
+                            <img className='w-full h-[40vh] object-cover' src=
+                            {restaurant.restaurant?.images[2]}  
                                 alt="" />
                         </Grid>
 
@@ -55,10 +77,10 @@ const RestaurantDetails = () => {
                 </div>
 
                 <div className='pt-3 pb-5'>
-                    <h1 className='text-4xl font-semibold'>Indian Fast Food</h1>
+                    <h1 className='text-4xl font-semibold'>{restaurant.restaurant?.name}</h1>
                     
                     <p className='text-gray-500 mt-1'>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia nemo deserunt aspernatur quisquam pariatur amet itaque ipsam, doloremque nihil porro voluptas sunt exercitationem ipsum dolore facere excepturi. Nesciunt, aperiam praesentium?
+                        {restaurant.restaurant?.description}
                     </p>
 
 
@@ -78,7 +100,7 @@ const RestaurantDetails = () => {
 
                        <CalendarMonthIcon/>
                         <span>
-                        Mon - Sun: 9:00 AM - 9:00 PM (Today)
+                            {restaurant.restaurant?.openingHours}
                         </span> 
                         </p>
 
@@ -158,4 +180,4 @@ const RestaurantDetails = () => {
     )
 }
 
-export default RestaurantDetails 
+export default RestaurantDetails
