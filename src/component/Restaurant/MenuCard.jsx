@@ -1,6 +1,7 @@
 import { Accordion, AccordionDetails, AccordionSummary,Button,Checkbox,FormControlLabel,FormGroup,Typography } from '@mui/material'
 import React from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { categorizeIngredients } from '../Util/categrizeIngredients';
 
 
 const demo=[
@@ -16,7 +17,7 @@ const demo=[
 ]
 
 
-const MenuCard = () => {
+const MenuCard = ({item}) => {
 
   const handleCheckBoxChange=(value)=>{
     console.log(value)
@@ -34,14 +35,15 @@ const MenuCard = () => {
         <div className='lg:flex items-center lg:gap-5'>
           <img 
           className='w-[7rem] h-[7rem] object-cover'
-          src="https://lh3.googleusercontent.com/p/AF1QipMZ8YdOZ04caY1pigSnjjLmOHfyPbtmfsvyXMIS=s680-w680-h510"
+          src=
+          {item.images[0]}
            alt="" />
 
 
         <div className='space-y-1 lg:space-y-5 lg:max-w-2xl'>
-          <p className='font-semibold text-xl'>Burger</p>
-          <p>Rs 550</p>
-          <p className='text-gray-400'>nice - food</p>
+          <p className='font-semibold text-xl'>{item.name}</p>
+          <p>Rs{item.price}</p>
+          <p className='text-gray-400'>{item.description}</p>
 
         </div>
 
@@ -56,16 +58,18 @@ const MenuCard = () => {
      <form>
       <div className='flex gap-5 flex-wrap'>
         {
-          demo.map((item)=>
+          Object.keys(categorizeIngredients(item.ingredients)).map((category)=>
             <div>
               <p>
                 {
-                  item.category
+                  category
                 }
               </p>
                     <FormGroup>
-        {item.ingredients.map((item)=> <FormControlLabel 
-        control={<Checkbox onChange={()=>handleCheckBoxChange(item)}/>} label={item} />) }
+        {categorizeIngredients(item.ingredients)[category].map((item)=> 
+        <FormControlLabel key={item.name}
+        control={<Checkbox 
+        onChange={()=>handleCheckBoxChange(item)}/>} label={item.name} />) }
 
         </FormGroup>
             </div>

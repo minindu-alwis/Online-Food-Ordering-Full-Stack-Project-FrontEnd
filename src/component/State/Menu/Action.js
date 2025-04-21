@@ -1,6 +1,7 @@
-import { api } from "../../../config/api";
 
 
+
+import { api } from "../../config/api";
 import { 
     CREATE_MENU_ITEM_REQUEST, 
     CREATE_MENU_ITEM_SUCCESS, 
@@ -37,24 +38,27 @@ import {
     };
   }
 
-
   export const getMenuItemsByRestaurantId = (reqData) => {
     return async (dispatch) => {
       dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST });
       try {
-        const { data } = await api.get(`api/food/restaurant/${reqData.restaurantId}?
-            vegetarian=${reqData.vegetarian}&nonVeg=${reqData.nonVeg}&seasonal=${reqData.seasonal}&food_category=${reqData.foodCategory}`, {
-          headers: {
-            Authorization: `Bearer ${reqData.jwt}`,
-          },
-        });
-        console.log("get menu",data);
+        const { data } = await api.get(
+          `api/food/restaurant/${reqData.restaurantId}?vagetarian=${reqData.vagetarian}&nonveg=${reqData.nonveg}&seasonal=${reqData.seasonal}&food_category=${reqData.foodCategory}`,
+          {
+            headers: {
+              Authorization: `Bearer ${reqData.jwt}`,
+            },
+          }
+        );
+        console.log("menu items by restaurant", data);
         dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS, payload: data });
       } catch (error) {
+        console.log("menu items by restaurant error", error);
         dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_FAILURE, payload: error });
       }
     };
-  }
+  };
+  
 
 
   export const searchMenuItem = ({keyword,jwt}) =>{
