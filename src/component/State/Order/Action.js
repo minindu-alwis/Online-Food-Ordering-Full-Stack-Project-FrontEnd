@@ -1,4 +1,5 @@
-import {api} from '../../../config/api';
+
+import { api } from "../../config/api";
 import { 
     CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, CREATE_ORDER_FAILURE, 
     GET_USERS_ORDERS_REQUEST, GET_USERS_ORDERS_SUCCESS, GET_USERS_ORDERS_FAILURE, 
@@ -21,6 +22,7 @@ export const createOrder = (reqData) => {
             console.log("created order", data);
             dispatch({ type: CREATE_ORDER_SUCCESS, payload: data });
         } catch (error) {
+            console.log("create order error", error);
             dispatch({ type: CREATE_ORDER_FAILURE, payload: error });
         }
     };
@@ -38,6 +40,7 @@ export const getUsersOrders = (jwt) => {
             console.log("users orders", data);
             dispatch({ type: GET_USERS_ORDERS_SUCCESS, payload:data });
         } catch (error) {
+            console.log("users orders error", error);
             dispatch({ type: GET_USERS_ORDERS_FAILURE, payload: error });
         }
     };

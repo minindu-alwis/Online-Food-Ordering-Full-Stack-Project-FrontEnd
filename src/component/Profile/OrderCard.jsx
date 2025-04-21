@@ -1,23 +1,24 @@
 import { Button, Card } from '@mui/material'
 import React from 'react'
 
-const OrderCard = () => {
+const OrderCard = ({item,order}) => {
   return (
     <Card className='flex justify-between items-center p-5'>
         <div className='flex items-center space-x-5'>
             <img className='h-16 w-16' 
-            src="https://www.certifiedangusbeef.com/_next/image?url=https%3A%2F%2Fappetizing-cactus-7139e93734.media.strapiapp.com%2FClassic_Smashed_Burger_111c4bfdb7.jpeg&w=3840&q=75"
+            src=
+            {item.food.images[0]}
             alt="" />
             <div>
-                <p>Burger</p>
-                <p>Rs 250</p>
+                <p>{item.food.name}</p>
+                <p>Rs {item.totalPrice}</p>
             </div>
 
         </div>
 
         <div>
             <Button className="cursor-not-allowed">
-                completed
+                {order.orderStatus}
             </Button>
         </div>
 
