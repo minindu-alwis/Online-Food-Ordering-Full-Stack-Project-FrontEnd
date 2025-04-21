@@ -3,7 +3,7 @@ import { Chip, Divider , IconButton } from '@mui/material'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
-const CartItem = () => {
+const CartItem = ({item}) => {
   return (
     <div className='px-5'>
         <div className='lg:flex items-center lg:space-x-5'>
@@ -35,7 +35,7 @@ const CartItem = () => {
                     </div>
 
                 </div>
-                <p className="ml-7">Rs 1999</p>
+                <p className="ml-7">Rs {item.totalPrice}</p>
 
             </div>
 

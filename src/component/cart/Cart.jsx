@@ -5,6 +5,7 @@ import { AddressCard } from './AddressCard'
 import HomeIcon from '@mui/icons-material/Home';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { useSelector } from 'react-redux';
 // import * as Yup from "yup"
 
 
@@ -45,6 +46,8 @@ const Cart = () => {
 
     const handleOpenAddressModal=()=> setOpen(true);
     const [open, setOpen] = React.useState(false);
+    const {cart}=useSelector(store=>store)
+
     const handleClose = () => setOpen(false);
     const handleSubmit = (values)=>{
         console.log("from value",values);
@@ -56,7 +59,7 @@ const Cart = () => {
             <main className='lg:flex justify-between'>
                 <section className='lg:w-[30] space-y-6 lg:min-h-screen pt-10'>
 
-                    {items.map((item) => <CartItem />)}
+                    {cart.cart.items.map((item) => <CartItem item={item}/>)}
 
 
 
