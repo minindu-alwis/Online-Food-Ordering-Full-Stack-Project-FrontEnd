@@ -4,7 +4,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import { Delete } from '@mui/icons-material';
 
 const orders = [1,1,1,1,1,1,1,1]
-const FoodCategoryTable = () => {
+const IngredientsTable = () => {
   return (
     <Box>
         <Card className='mt-1'>
@@ -14,7 +14,7 @@ const FoodCategoryTable = () => {
                   <CreateIcon />
                 </IconButton>
               }
-            title={"Food Category"}
+            title={"Menu"}
             sx={{pt:2,alignItems:"center"}}
             />
 
@@ -24,9 +24,9 @@ const FoodCategoryTable = () => {
         <TableHead>
           <TableRow>
             <TableCell align="left">Id</TableCell>
-            <TableCell align="left">Name</TableCell>
-            
-            
+            <TableCell align="right">Name</TableCell>
+            <TableCell align="right">Category</TableCell>
+            <TableCell align="right">Avaibilty</TableCell>            
           </TableRow>
         </TableHead>
         <TableBody>
@@ -38,7 +38,10 @@ const FoodCategoryTable = () => {
               <TableCell component="th" scope="row">
                 {1}
               </TableCell>
-              <TableCell align="left">{"alwis"}</TableCell>
+              <TableCell align="right">{"Image"}</TableCell>
+              <TableCell align="right">{"price"}</TableCell>
+              <TableCell align="right">{"burger"}</TableCell>
+          
             </TableRow>
           ))}
         </TableBody>
@@ -52,4 +55,4 @@ const FoodCategoryTable = () => {
   )
 }
 
-export default FoodCategoryTable
+export default IngredientsTable

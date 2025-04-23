@@ -4,7 +4,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import { Delete } from '@mui/icons-material';
 
 const orders = [1,1,1,1,1,1,1,1]
-const FoodCategoryTable = () => {
+const IngredientsCategoryTable = () => {
   return (
     <Box>
         <Card className='mt-1'>
@@ -14,13 +14,13 @@ const FoodCategoryTable = () => {
                   <CreateIcon />
                 </IconButton>
               }
-            title={"Food Category"}
+            title={"Ingredients Category"}
             sx={{pt:2,alignItems:"center"}}
             />
 
 
 <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell align="left">Id</TableCell>
@@ -52,4 +52,4 @@ const FoodCategoryTable = () => {
   )
 }
 
-export default FoodCategoryTable
+export default IngredientsCategoryTable
