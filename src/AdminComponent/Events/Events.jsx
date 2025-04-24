@@ -36,14 +36,11 @@ const Events = () => {
     setFormValues({...fromValues,[e.target.name]:e.tartget.value})
   } 
 
-  // const handleDateChange = (e) =>{
-  //   const formatedDate=days
-  // }
 
   return (
     <div>
       <div className='p-5'>
-        <Button variant="contained">Create New Event</Button>
+        <Button variant="contained" onClick={handleOpen}>Create New Event</Button>
 
         <Modal
         open={open}
@@ -88,39 +85,7 @@ const Events = () => {
                 />
               </Grid>
 
-              {/* <Grid item xs={12}>
-                <LocalizationProvider  dateAdapter={AdapterDayjs}>
-                  <DateTimePicker
-                    renderInput={(props)=><TextField {...props} />}
-                    label="Start Date And Time"
-                    value={fromValues.startedAt}
-                    onChange={(newValue)=>
-                      handleDateChange(newValue,"startedAt")
-                    }
-                    inputFormat="MM/dd/yyyy hh:mm a"
-                    className="w-full"
-                    sx={{width:"100%"}}
-                 />
-                  </LocalizationProvider> 
-              </Grid>
-
-
-              <Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateTimePicker
-                    renderInput={(props)=><TextField {...props} />}
-                    label="End Date And Time"
-                    value={fromValues.startedAt}
-                    onChange={(newValue)=>
-                      handleDateChange(newValue,"endsAt")
-                    }
-                    inputFormat="MM/dd/yyyy hh:mm a"
-                    className="w-full"
-                    sx={{width:"100%"}}
-                 />
-                  </LocalizationProvider> 
-              </Grid> */}
-
+          
             </Grid>
 
           </form>
