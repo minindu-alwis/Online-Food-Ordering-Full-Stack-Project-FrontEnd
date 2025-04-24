@@ -16,7 +16,7 @@ export const NavBar = () => {
         if(auth.user.role==="ROLE_CUSTOMER"){
             navigate("/my-profile")
     }else{
-        navigate("/admin/restaurnt")
+        navigate("/admin/restaurants")
     }
 
 }

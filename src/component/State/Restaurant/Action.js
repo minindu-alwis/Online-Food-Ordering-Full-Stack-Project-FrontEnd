@@ -90,7 +90,7 @@ export const createRestaurant = (reqData) => {
             console.log("restaurant created",data);
             
         } catch (error) {
-            console.log("catch error",error);
+            console.log("catch error restaurent",error);
             dispatch({type:CREATE_RESTAURANT_FAILURE,payload:error});
         }
     }
