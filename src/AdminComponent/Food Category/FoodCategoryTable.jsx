@@ -3,9 +3,16 @@ import React from 'react'
 import CreateIcon from '@mui/icons-material/Create';
 import { Delete } from '@mui/icons-material';
 import CreateFoodCategory from './CreateFoodCategory';
+import { useDispatch, useSelector } from 'react-redux';
 
 const orders = [1,1,1,1,1,1,1,1]
 const FoodCategoryTable = () => {
+
+  
+  const {restaurant} = useSelector((store) => store)
+  console.log("restaurent detaiks",restaurant)
+  const dispatch=useDispatch();
+
 
   const style = {
     position: 'absolute',
@@ -22,6 +29,9 @@ const FoodCategoryTable = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+
+  
 
   return (
     <Box>

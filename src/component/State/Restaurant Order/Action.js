@@ -8,8 +8,9 @@ import {
     UPDATE_ORDER_STATUS_SUCCESS, 
     UPDATE_ORDER_STATUS_FAILURE 
 } from './ActionType';
+import { api } from "../../config/api";
 
-import {api} from '../../../config/api';
+
 
 export const updateOrderStatus = ({orderId, orderStatus,jwt})=>{
     return async (dispatch)=>{
@@ -29,22 +30,24 @@ export const updateOrderStatus = ({orderId, orderStatus,jwt})=>{
     }
 }
 
-export const fetchRestaurantOrders = (restaurantId,orderStatus,jwt)=>{
-    return async (dispatch)=>{
-        dispatch({type:GET_RESTAURANTS_ORDER_REQUEST});
+export const fetchRestaurantOrders = ({ restaurantId, orderStatus, jwt }) => {
+    return async (dispatch) => {
+        dispatch({ type: GET_RESTAURANTS_ORDER_REQUEST });
         try {
-            const {data} = await api.get(`/api/admin/order/
-                restaurant/${restaurantId}`,{
-                    params:{order_status:orderStatus},
-                    headers:{
-                    Authorization:`Bearer ${jwt}`
+            const { data } = await api.get(
+                `/api/admin/order/restaurant/${restaurantId}`,
+                {
+                    params: { order_status: orderStatus },
+                    headers: {
+                        Authorization: `Bearer ${jwt}`
+                    }
                 }
-            });
-            const orders=data;
-            console.log("restaurant orders",orders);
-            dispatch({type:GET_RESTAURANTS_ORDER_SUCCESS,payload:orders});
+            );
+            console.log("restaurant orders", data);
+            dispatch({ type: GET_RESTAURANTS_ORDER_SUCCESS, payload: data });
         } catch (error) {
-            dispatch({type:GET_RESTAURANTS_ORDER_FAILURE,payload:error});
+            console.log("fetchRestaurantOrders error", error);
+            dispatch({ type: GET_RESTAURANTS_ORDER_FAILURE, payload: error.message });
         }
-    }
-}
+    };
+};

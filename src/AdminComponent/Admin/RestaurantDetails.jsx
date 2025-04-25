@@ -29,7 +29,7 @@ const RestaurantDetails = () => {
 
           <div>
           <Button
-            color={restaurant.userRestaurants?.open ? "error" : "primary"}
+            color={restaurant.userRestaurants?.open ? "error" : "success"}
             className="py-[1rem] px-[2rem]"
             variant="contained"
             onClick={handleRestaurantStatus}
