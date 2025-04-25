@@ -13,23 +13,35 @@ const RestaurantCard = ({ item }) => {
     const jwt = localStorage.getItem('jwt');
     const { auth } = useSelector((store) => store);
 
-    const handleAddToFavorite = () => {
+    const handleAddToFavorite = (e) => {
+        e.stopPropagation(); // Prevent navigation when clicking favorite button
         dispatch(addToFavorite({ restaurantId: item.id, jwt }));
     };
 
-    const handleNavigateToRestaurant=()=>{
+    const handleNavigateToRestaurant = () => {
         if(item.open){
-          navigate(`/restaurant/${item.address.city}/${item.name}/${item.id}`);
+            // Use slug-friendly URL path
+            const restaurantName = (item.title || item.name || 'restaurant')
+                .toLowerCase()
+                .replace(/[^\w\s]/gi, '')
+                .replace(/\s+/g, '-');
+                
+            const city = (item.address?.city || 'unknown')
+                .toLowerCase()
+                .replace(/[^\w\s]/gi, '')
+                .replace(/\s+/g, '-');
+
+            navigate(`/restaurant/${city}/${restaurantName}/${item.id}`);
         }
     };
 
     return (
-        <Card  className="w-[18rem]">
+        <Card className="w-[18rem]" onClick={handleNavigateToRestaurant}>
             <div className={`${item.open ? 'cursor-pointer' : 'cursor-not-allowed'} relative`}>
                 <img
                     className="w-full h-[10rem] rounded-t-md object-cover"
-                    src={item.images[0]}
-                    alt=""
+                    src={item.images?.[0] || '/default-restaurant.jpg'}
+                    alt={item.title || item.name}
                 />
 
                 <Chip
@@ -42,14 +54,16 @@ const RestaurantCard = ({ item }) => {
 
             <div className="p-4 textPart lg:flex w-full justify-between">
                 <div className="space-y-1">
-                    <p onClick={handleNavigateToRestaurant} className="font-semibold text-lg cursor-pointer">{item.name}</p>
+                    <p className="font-semibold text-lg cursor-pointer">
+                        {item.title || item.name}
+                    </p>
                     <p className="text-gray-500 text-sm">{item.description}</p>
                 </div>
 
                 <div>
                     <IconButton onClick={handleAddToFavorite}>
                         {isPresentInFavorites(auth.favorites || [], item) ? (
-                            <FavoriteIcon />
+                            <FavoriteIcon color="error" />
                         ) : (
                             <FavoriteBorderIcon />
                         )}
