@@ -4,9 +4,13 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import { useSelector } from 'react-redux';
 
 
 const RestaurantDetails = () => {
+
+  const {restaurant} = useSelector((store) => store)
+  console.log("restaurent detaiks",restaurant)
   const handleRestaurantStatus = () => {
     
   }
@@ -16,7 +20,7 @@ const RestaurantDetails = () => {
       <div className='py- flex justify-center items-center gap-5'>
 
         <h1 className='text-2xl lg:text-7xl text-center font-bold p-5'>
-          Minidu Food</h1>
+          {restaurant.userRestaurants?.name}</h1>
 
           <div>
             <Button
@@ -44,7 +48,7 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Owner</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                     Best Foods Minidu
+                  {restaurant.userRestaurants?.owner.fullName}
                  </p>
 
                 </div>
@@ -55,7 +59,7 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Restaurant Name</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                     Best Foods Minidu
+                  {restaurant.userRestaurants?.name}
                  </p>
 
                 </div>
@@ -66,7 +70,7 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Cuisine Type</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                     Best Foods Minidu
+                  {restaurant.userRestaurants?.cuisineType}
                  </p>
 
                 </div>
@@ -77,7 +81,7 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Opening Hourse</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                     Best Foods Minidu
+                  {restaurant.userRestaurants?.openingHours}
                  </p>
 
                 </div>
@@ -88,10 +92,11 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Status</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                    {true? <span className=
+                    {restaurant.userRestaurants?.open? <span className=
                      'px-5 py-2 rounded-full bg-green-400 text-gray-950'>Open
                      </span>:<span className=
-                     'px-5 py-2 rounded-full bg-red-400 text-gray-950'>Closed
+                     'px-5 py-2 rounded-full bg-red-400 text-gray-950'>
+                      Closed
                      </span>}
                  </p>
 
@@ -116,7 +121,7 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Country</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                     Best Foods Minidu
+                  {restaurant?.userRestaurants?.address?.streetAddress || "Country not available"}
                  </p>
 
                 </div>
@@ -127,7 +132,7 @@ const RestaurantDetails = () => {
                  <p className='w-48'>City</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                     Best Foods Minidu
+                  {restaurant?.userRestaurants?.address?.city || "City not available"}
                  </p>
 
                 </div>
@@ -138,7 +143,7 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Postal Code</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                     Best Foods Minidu
+                  {restaurant?.userRestaurants?.address?.postalCode || "Postal code not available"}
                  </p>
 
                 </div>
@@ -149,7 +154,7 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Street Address</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                     Best Foods Minidu
+                  {restaurant?.userRestaurants?.address?.streetAddress || "Street not available"}
                  </p>
 
                 </div>
@@ -173,7 +178,7 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Email</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                     Best Foods Minidu
+                  {restaurant?.userRestaurants?.contactInformation?.email || "No email"}
                  </p>
 
                 </div>
@@ -184,7 +189,7 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Mobile</p>
                  <p className='text-gray-400'>
                   <span  className='pr-5'>-</span>
-                     Best Foods Minidu
+                  {restaurant?.userRestaurants?.contactInformation?.mobile || "No mobile"}
                  </p>
 
                 </div>
@@ -195,19 +200,19 @@ const RestaurantDetails = () => {
                  <p className='w-48'>Social</p>
                       <div className='flex gap-2 text-gray-400 items-center pb-3'>
                         <span className='pr-5'>-</span>
-                        <a href='/'>
+                        <a href={restaurant?.userRestaurants?.contactInformation?.twitter}>
                           <InstagramIcon sx={{fontSize:"3rem"}}/>
                         </a>
 
-                        <a href='/'>
+                        <a href={restaurant?.userRestaurants?.contactInformation?.twitter}>
                           <TwitterIcon sx={{fontSize:"3rem"}}/>
                         </a>
 
-                        <a href='/'>
+                        <a href={restaurant?.userRestaurants?.contactInformation?.twitter}>
                           <FacebookIcon sx={{fontSize:"3rem"}}/>
                         </a>
 
-                        <a href='/'>
+                        <a href={restaurant?.userRestaurants?.contactInformation?.twitter}>
                           <LinkedInIcon sx={{fontSize:"3rem"}}/>
                         </a>
                       </div>

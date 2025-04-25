@@ -4,12 +4,27 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import HomeIcon from '@mui/icons-material/Home';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { useDispatch } from 'react-redux';
+import { clearCart } from '../State/Cart/Action';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const containerRef = useRef(null);
+  const dispatch= useDispatch();
+  const jwt = localStorage.getItem("jwt");
+
+   // Clear cart only once when component mounts
+   useEffect(() => {
+    if (jwt) {
+      dispatch(clearCart(jwt));
+      console.log("✅ Cart cleared after payment success");
+    }
+  }, [dispatch, jwt]); // Add dependencies to prevent multiple dispatches
+
   
   useEffect(() => {
+
+  
     // Create floating money icons animation
     const container = containerRef.current;
     if (!container) return;

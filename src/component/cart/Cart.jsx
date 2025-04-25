@@ -7,6 +7,7 @@ import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { createOrder } from '../State/Order/Action';
+import { clearCart } from '../State/Cart/Action';
 // import * as Yup from "yup"
 
 
@@ -46,41 +47,50 @@ const Cart = () => {
     const [open, setOpen] = React.useState(false);
     const { cart,auth } = useSelector((store) => store);
     const dispatch=useDispatch()
+    const jwt=localStorage.getItem("jwt");
+    
 
     const handleClose = () => setOpen(false);
-    const handleSubmit = (values) => {
-    if (!cart.cartItems || cart.cartItems.length === 0) {
-        console.error("Cart is empty. Cannot create an order.");
-        return;
-    }
-
-    const restaurantId = cart.cartItems[0]?.food?.restaurant?.id; // Corrected access
-    if (!restaurantId) {
-        console.error("Restaurant ID is missing. Cannot create an order.");
-        console.log("Cart Items:", cart.cartItems); // Debugging log
-        console.log("First Cart Item Food Object:", cart.cartItems[0]?.food);
-        return;
-    }
-
-    const data = {
-        jwt: localStorage.getItem("jwt"),
-        order: {
-            restaurantId: restaurantId,
-            deliveryAddress: {
-                fullName: auth.user?.fullName,
-                streetAddress: values.streetAddress,
-                city: values.city,
-                state: values.state,
-                postalCode: values.postatlcode, // Fixed typo
-                country: "Sri Lanka",
+    const handleSubmit = async (values) => {
+        if (!cart.cartItems || cart.cartItems.length === 0) {
+            console.error("Cart is empty. Cannot create an order.");
+            return;
+        }
+    
+        const restaurantId = cart.cartItems[0]?.food?.restaurant?.id;
+        if (!restaurantId) {
+            console.error("Restaurant ID is missing.");
+            return;
+        }
+    
+        const data = {
+            jwt,
+            order: {
+                restaurantId,
+                deliveryAddress: {
+                    fullName: auth.user?.fullName,
+                    streetAddress: values.streetAddress,
+                    city: values.city,
+                    state: values.state,
+                    postalCode: values.postatlcode,
+                    country: "Sri Lanka",
+                },
             },
-        },
+        };
+    
+        try {
+            const result = await dispatch(createOrder(data)); // ✅ wait for order
+            console.log("BRO created order", result);
+    
+            if (result?.payment_url) {
+                window.location.href = result.payment_url; // ✅ go to Stripe
+                dispatch(clearCart(jwt)); // ✅ clear only after order created
+            }
+        } catch (err) {
+            console.error("Order creation failed", err);
+        }
     };
-
-    dispatch(createOrder(data));
-    console.log("Order submitted:", data);
-};
-
+    
     return (
         <>
             <main className="lg:flex justify-between">

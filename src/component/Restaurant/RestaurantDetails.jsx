@@ -23,6 +23,8 @@ const menu=[1,1,1,1,1,1,1]
 
 const RestaurantDetails = () => {
 
+    
+
     const [foodType,setFoodType]=useState("all");
 
     const navigate = useNavigate();
