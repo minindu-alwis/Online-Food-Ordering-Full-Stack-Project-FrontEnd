@@ -70,7 +70,7 @@ const Cart = () => {
       totalPayment: itemTotal + 90 + 20 + 20
     });
     
-    // Log for debugging
+    
     console.log("Bill details updated:", itemTotal);
   }, [cartItems]);
   

@@ -143,7 +143,7 @@ export const updateRestaurantStatus = ({restaurantId,jwt}) => {
     return async (dispatch) => {
         dispatch({type:UPDATE_RESTAURANT_STATUS_REQUEST});
         try {
-            const res = await api.put(`/api/admin/restaurants/${restaurantId}/status`,{},{
+            const res = await api.put(`/api/admin/restaurants/update/${restaurantId}/status`,{},{
                 headers:{
                     Authorization: `Bearer ${jwt}`,
                 },

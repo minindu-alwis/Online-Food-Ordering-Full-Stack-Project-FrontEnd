@@ -4,15 +4,20 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateRestaurantStatus } from '../../component/State/Restaurant/Action';
 
 
 const RestaurantDetails = () => {
 
   const {restaurant} = useSelector((store) => store)
   console.log("restaurent detaiks",restaurant)
+  const dispatch=useDispatch();
   const handleRestaurantStatus = () => {
-    
+    dispatch(updateRestaurantStatus({
+      restaurantId:restaurant.userRestaurants.id,
+      jwt:localStorage.getItem("jwt")
+    }))
   }
 
   return (
@@ -23,14 +28,16 @@ const RestaurantDetails = () => {
           {restaurant.userRestaurants?.name}</h1>
 
           <div>
-            <Button
-             color={true?"primary":"error"}
-              className='py-[1rem] px-[2rem]' 
-              variant='contained'
-               onClick={handleRestaurantStatus} size="large">
-              {true?"Open":"Close"}
-            </Button>
-          </div>
+          <Button
+            color={restaurant.userRestaurants?.open ? "error" : "primary"}
+            className="py-[1rem] px-[2rem]"
+            variant="contained"
+            onClick={handleRestaurantStatus}
+            size="large"
+          >
+            {restaurant.userRestaurants?.open ? "Close" : "Open"}
+          </Button>
+        </div>
 
       </div>
 
