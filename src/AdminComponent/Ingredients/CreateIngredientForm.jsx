@@ -1,88 +1,115 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { createIngredient } from '../../component/State/Ingredients/Action'
 
 const CreateIngredientForm = () => {
+    const { restaurant, ingredients } = useSelector((store) => store)
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt")
+    const restaurantId = restaurant.userRestaurants?.id;
+    
+    const [formData, setFormData] = useState({
+        name: "",
+        categoryId: "",
+        restaurantId: restaurantId
+    });
 
-    const [formData,setFormData] = useState({name:"",ingredientCategoryId:""})
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        if (!formData.name.trim()) {
+            alert("Please enter an ingredient name");
+            return;
+        }
 
-    const handleSubmit = () => {
         const data = {
-            name: formData.categoryName,  
-            restaurantId: {
-                id: 1
-            }
+            name: formData.name,
+            categoryId: formData.categoryId,
+            restaurantId: restaurantId
         };
-        console.log(data);
+        
+        console.log("Sending data:", data);
+        dispatch(createIngredient({ data, jwt }));
+        
+        // Reset form after submission
+        setFormData({
+            name: "",
+            categoryId: "",
+            restaurantId: restaurantId
+        });
     }
 
     const handleInputChange = (e) => {
-        const {name,value}=e.target
+        const { name, value } = e.target;
         setFormData({
-            ...formData,[name]:value
-        })
+            ...formData,
+            [name]: value
+        });
     }
 
-  return (
-    <div>
-
+    return (
         <div className='p-5'>
-
-            <h1 className='space-y-5 text-gray-400 text-center text-xl pb-10'>Create Ingredient</h1>
+            <h1 className='space-y-5 text-gray-400 text-center text-xl pb-10'>
+                Create Ingredient
+            </h1>
 
             <form onSubmit={handleSubmit}>
-  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-    <TextField
-      fullWidth
-      id='ingredient'
-      name='ingredient'
-      label='Ingredient'
-      variant='outlined'
-      onChange={handleInputChange}
-      value={formData.ingredient}
-    />
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <TextField
+                        fullWidth
+                        id='name'
+                        name='name'
+                        label='Ingredient Name'
+                        variant='outlined'
+                        onChange={handleInputChange}
+                        value={formData.name}
+                        required
+                    />
 
-<FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="category"
-                    value={formData.ingredientCategoryId}
-                    label="Category"
-                    onChange={handleInputChange}
-                    name='ingredientCategoryId'
-                >
-                    <MenuItem value={true}>Yes</MenuItem>
-                    <MenuItem value={false}>No</MenuItem>
-                </Select>
-                </FormControl>
+                    <FormControl fullWidth>
+                        <InputLabel id="category-label">Category</InputLabel>
+                        <Select
+                            labelId="category-label"
+                            id="categoryId"
+                            value={formData.categoryId}
+                            label="Category"
+                            onChange={handleInputChange}
+                            name='categoryId'
+                            required
+                        >
+                            {ingredients.category?.map((item) => (
+                                <MenuItem key={item.id} value={item.id}>
+                                    {item.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
     
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                <Button
-                    variant='contained'
-                    type='submit'
-                    sx={{
-                    px: 4,
-                    py: 1.5,
-                    fontSize: '1rem',
-                    backgroundColor: '#1976d2',
-                    '&:hover': {
-                        backgroundColor: 'primary',
-                        transform: 'translateY(-1px)',
-                    },
-                    transition: 'all 0.2s ease-in-out',
-                    boxShadow: 2,
-                    borderRadius: 1
-                    }}
-                >
-                    Create Category
-                </Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                        <Button
+                            variant='contained'
+                            type='submit'
+                            sx={{
+                                px: 4,
+                                py: 1.5,
+                                fontSize: '1rem',
+                                backgroundColor: '#1976d2',
+                                '&:hover': {
+                                    backgroundColor: '#1565c0',
+                                },
+                                transition: 'all 0.2s',
+                                boxShadow: 2,
+                                borderRadius: 1
+                            }}
+                        >
+                            Create Ingredient
+                        </Button>
+                    </Box>
                 </Box>
-            </Box>
             </form>
         </div>
-        
-    </div>
-  )
+    )
 }
 
 export default CreateIngredientForm

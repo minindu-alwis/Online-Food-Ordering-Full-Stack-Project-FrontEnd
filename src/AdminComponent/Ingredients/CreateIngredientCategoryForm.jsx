@@ -1,7 +1,12 @@
 import { Box, Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { createIngredient, createIngredientCategory } from '../../component/State/Ingredients/Action'
 
 const CreateIngredientCategoryForm = () => {
+    const jwt = localStorage.getItem("jwt")
+    const {restaurant} = useSelector((store) => store)
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         name: "",
         restaurantId: ""
@@ -11,10 +16,10 @@ const CreateIngredientCategoryForm = () => {
         e.preventDefault();
         const data = {
             name: formData.name,
-            restaurantId: formData.restaurantId
+            restaurantId: restaurant.userRestaurants.id
         };
         console.log(data);
-        // Add your API call here
+        dispatch(createIngredientCategory({data, jwt})); // Pass as object
     }
 
     const handleInputChange = (e) => {

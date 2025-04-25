@@ -1,5 +1,6 @@
-import {api} from '../../../config/api';
 
+
+import { api } from '../../config/api';
 import { 
     GET_INGREDIENTS,
     UPDATE_STOCK,
@@ -14,9 +15,7 @@ import {
     GET_INGREDIENT_CATEGORY_FAILURE 
 } from './ActionType';
 
-
-
-export const getAllIngredientsOfRestaurant = ({id,jwt}) => {
+export const getAllIngredientsOfRestaurant = ({id, jwt}) => {
     return async (dispatch) => {
         try {
             const response = await api.get(`/api/admin/ingredients/restaurant/${id}`, {
@@ -24,13 +23,14 @@ export const getAllIngredientsOfRestaurant = ({id,jwt}) => {
                     Authorization: `Bearer ${jwt}`,
                 },
             });
-            console.log("all ingredients of restaurant", data);
+            console.log("all ingredients of restaurant", response.data);
             dispatch({ type: GET_INGREDIENTS, payload: response.data });
         } catch (error) {
             console.log("all ingredients of restaurant error", error);
+            // You might want to dispatch an error action here
         }
     };
-}
+};
 
 export const createIngredient = ({data,jwt}) => {
     return async (dispatch) => {
@@ -49,8 +49,8 @@ export const createIngredient = ({data,jwt}) => {
         }
     }
 }
-export const createIngredientCategory = ({data,jwt}) => {
-    console.log("create ingredient category",data,"jwt",jwt);
+export const createIngredientCategory = ({data, jwt}) => {
+    console.log("create ingredient category", data, "jwt", jwt);
     return async (dispatch) => {
         dispatch({ type: CREATE_INGREDIENT_CATEGORY_REQUEST });
         try {
@@ -67,39 +67,63 @@ export const createIngredientCategory = ({data,jwt}) => {
         }
     }
 }
-
-export const getIngredientCategory = ({id,jwt}) => {
+export const getIngredientCategory = ({ id, jwt }) => {
     return async (dispatch) => {
         dispatch({ type: GET_INGREDIENT_CATEGORY_REQUEST });
         try {
-            const response = await api.get(`/api/admin/ingredients/restaurant/${id}/category`, {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                },
-            });
-            console.log("get ingredient category", response.data);
-            dispatch({ type: GET_INGREDIENT_CATEGORY_SUCCESS, payload: response.data });
+            const { data } = await api.get(
+                `/api/admin/ingredients/restaurant/${id}/category`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                }
+            );
+            console.log("Ingredient categories fetched:", data);
+            dispatch({ type: GET_INGREDIENT_CATEGORY_SUCCESS, payload: data });
         } catch (error) {
-            console.log("get ingredient category error", error);
-            dispatch({ type: GET_INGREDIENT_CATEGORY_FAILURE, payload: error });
+            console.error(
+                "Failed to fetch ingredient categories:",
+                error.response?.data || error.message
+            );
+            dispatch({
+                type: GET_INGREDIENT_CATEGORY_FAILURE,
+                payload: error.response?.data || "Invalid token or server error",
+            });
         }
     };
-}
+};
 
-
-export const updateStock = ({id,jwt}) => {
+export const updateStock = ({ inId, jwt }) => {
     return async (dispatch) => {
-        try {
-            const {data} = await api.put(`/api/admin/ingredients/${id}/stock`, {}, {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                },
-            });
-            dispatch({ type: UPDATE_STOCK, payload: data });
-            
-            console.log("updated stock", response.data);
-        } catch (error) {
-            console.log("updated stock error", error);
-        }
+      try {
+        // Optimistic update - immediately reflect the change in UI
+        dispatch({ 
+          type: UPDATE_STOCK, 
+          payload: { inId } // Just send the ID to toggle status
+        });
+  
+        const { data } = await api.put(
+          `/api/admin/ingredients/${inId}/stock`, 
+          null, // Better than empty object
+          {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+  
+        console.log("Stock updated successfully:", data);
+        
+      } catch (error) {
+        console.error("Stock update failed:", error);
+        
+        // Revert the optimistic update on failure
+        dispatch({ 
+          type: UPDATE_STOCK, 
+          payload: { inId, error: true } 
+        });
+      }
     };
-}
+  };

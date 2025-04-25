@@ -1,17 +1,23 @@
 import { Box, Card, CardActions, CardHeader, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import CreateIcon from '@mui/icons-material/Create';
 import { Delete } from '@mui/icons-material';
 import CreateFoodCategory from './CreateFoodCategory';
 import { useDispatch, useSelector } from 'react-redux';
+import { getRestaurantsCategory } from '../../component/State/Restaurant/Action';
+import { fetchRestaurantOrders } from '../../component/State/Restaurant Order/Action';
 
 const orders = [1,1,1,1,1,1,1,1]
 const FoodCategoryTable = () => {
 
   
-  const {restaurant} = useSelector((store) => store)
-  console.log("restaurent detaiks",restaurant)
-  const dispatch=useDispatch();
+   const jwt = localStorage.getItem("jwt")
+     const {restaurant } = useSelector((store) => store)
+     console.log("restauren",restaurant);
+     
+     const restaurantId = restaurant.userRestaurants?.id
+     const dispatch=useDispatch()
+
 
 
   const style = {
@@ -30,8 +36,28 @@ const FoodCategoryTable = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-
   
+      useEffect(() => {
+          if (restaurantId) {
+              // Fetch restaurant categories
+              dispatch(getRestaurantsCategory({
+                  jwt,
+                  restaurantId
+              }))
+  
+              // Fetch restaurant orders
+              dispatch(fetchRestaurantOrders({
+                  jwt,
+                  restaurantId,
+              }))
+  
+              // You might want to add these too
+              //dispatch(getMenuItemsByRestaurantId({ restaurantId, jwt }))
+              //dispatch(getRestaurantById({ restaurantId, jwt }))
+          }
+      }, [restaurantId, jwt])
+
+
 
   return (
     <Box>
@@ -58,15 +84,15 @@ const FoodCategoryTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {orders.map((row) => (
+          {restaurant.categories.map((item) => (
             <TableRow
-              key={row.name}
+              key={item.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {1}
+                {item.id}
               </TableCell>
-              <TableCell align="left">{"alwis"}</TableCell>
+              <TableCell align="left">{item.name}</TableCell>
             </TableRow>
           ))}
         </TableBody>
