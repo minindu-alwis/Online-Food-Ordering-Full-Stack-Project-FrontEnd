@@ -3,48 +3,48 @@ import React from 'react'
 import { useState } from 'react';
 import OrderTable from './OrderTable';
 
-
-const oderStatus = [
-    {lable:"All", value:"ALL"},
-    {lable:"Pending", value:"PENDING"},
-    {lable:"Completed", value:"COMPLETED"},
+const orderStatusOptions = [
+    {label:"All", value:"ALL"},
+    {label:"Pending", value:"PENDING"},
+    {label:"Completed", value:"COMPLETED"},
+    {label:"Out For Delivery", value:"OUT_FOR_DELIVERY"},
+    {label:"Delivered", value:"DELIVERED"},
 ]
 
 const Orders = () => {
-    const [filterValue, setFilterValue] = useState("all");
+    const [filterValue, setFilterValue] = useState("ALL");
 
-    const handleFilter = (e,value) => {
-        setFilterValue(value);
+    const handleFilterChange = (event) => {
+        setFilterValue(event.target.value);
     }
 
   return (
     <div className='px-2'>
         <Card className='p-5'>
-           
-        <Typography sx={{paddingBottom:"1rem"}} variant='h5'>
-            Order Status
+            <Typography sx={{paddingBottom:"1rem"}} variant='h5'>
+                Order Status
             </Typography>    
 
-
-         <FormControl>
-            <RadioGroup onChange={handleFilter} 
-            row name='category'
-             value={filterValue || "all"}>
-                {
-                    oderStatus.map((item) => (
+            <FormControl>
+                <RadioGroup 
+                    onChange={handleFilterChange} 
+                    row 
+                    name='order-status'
+                    value={filterValue}
+                >
+                    {orderStatusOptions.map((item) => (
                         <FormControlLabel 
-                        key={item.lable}
-                        value={item.value} 
-                        control={<Radio />} 
-                        label={item.lable} 
-                        sx={{color:"gray"}}/>
-                    ))
-                }
-            </RadioGroup>
+                            key={item.value}
+                            value={item.value} 
+                            control={<Radio />} 
+                            label={item.label} 
+                            sx={{color:"gray"}}
+                        />
+                    ))}
+                </RadioGroup>
             </FormControl>   
-            </Card>
-        <OrderTable/>
-
+        </Card>
+        <OrderTable filterStatus={filterValue}/>
     </div>
   )
 }

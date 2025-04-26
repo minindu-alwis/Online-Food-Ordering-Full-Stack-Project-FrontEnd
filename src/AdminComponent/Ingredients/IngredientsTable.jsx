@@ -1,110 +1,159 @@
-import { Box, Button, Card, CardHeader, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import React, { useEffect } from 'react'
-import CreateIcon from '@mui/icons-material/Create';
-import CreateIngredientForm from './CreateIngredientForm';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllIngredientsOfRestaurant, updateStock } from '../../component/State/Ingredients/Action';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import { 
+  Box, 
+  Button, 
+  Card, 
+  CardHeader, 
+  IconButton, 
+  Modal, 
+  Paper, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow,
+  Chip,
+  Typography,
+  Avatar,
+  Divider
+} from '@mui/material'
+import CreateIcon from '@mui/icons-material/Create'
+import AddIcon from '@mui/icons-material/Add'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import CancelIcon from '@mui/icons-material/Cancel'
+import LocalDiningIcon from '@mui/icons-material/LocalDining'
+import CreateIngredientForm from './CreateIngredientForm'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllIngredientsOfRestaurant, updateStock } from '../../component/State/Ingredients/Action'
 
 const IngredientsTable = () => {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [open, setOpen] = React.useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
-  const jwt = localStorage.getItem("jwt");
-  const { restaurant, ingredients } = useSelector((store) => store);
-  const dispatch = useDispatch();
-  const id = restaurant.userRestaurants?.id;
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 4,
+  }
+
+  const jwt = localStorage.getItem("jwt")
+  const { restaurant, ingredients } = useSelector((store) => store)
+  const dispatch = useDispatch()
+  const id = restaurant.userRestaurants?.id
 
   useEffect(() => {
-      if (jwt && id) {
-          dispatch(getAllIngredientsOfRestaurant({ jwt, id }));
-      }
-  }, [dispatch, jwt, id]);
+    if (jwt && id) {
+      dispatch(getAllIngredientsOfRestaurant({ jwt, id }))
+    }
+  }, [dispatch, jwt, id])
 
   const handleUpdateStock = (inId) => {
-    if (!inId) return;
+    if (!inId) return
     dispatch(updateStock({ inId, jwt }))
       .then(() => {
-        // After successful update, refresh the ingredients list
-        dispatch(getAllIngredientsOfRestaurant({ jwt, id }));
-      });
-  };
+        dispatch(getAllIngredientsOfRestaurant({ jwt, id }))
+      })
+  }
 
   return (
     <Box>
-        <Card className='mt-1'>
-            <CardHeader
-            action={
-                <IconButton onClick={handleOpen} aria-label="settings">
-                  <CreateIcon />
-                </IconButton>
-              }
-            title={"Ingredients"}
-            sx={{pt:2,alignItems:"center"}}
-            />
+      <Card elevation={3} sx={{ borderRadius: 2 }}>
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: 'primary.main' }}>
+              <LocalDiningIcon />
+            </Avatar>
+          }
+          action={
+            <IconButton onClick={handleOpen} color="primary">
+              <AddIcon />
+            </IconButton>
+          }
+          title={<Typography variant="h6" fontWeight="600">Ingredients</Typography>}
+          subheader="Manage your restaurant's ingredients"
+          sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
+        />
 
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell align="left">Id</TableCell>
-                    <TableCell align="right">Name</TableCell>
-                    <TableCell align="right">Category</TableCell>
-                    <TableCell align="right">Avaibilty</TableCell>            
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {ingredients.ingredients?.map((item) => (
-                    <TableRow
-                      key={item.id}  // Changed from item.name to item.id for better key uniqueness
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        <TableContainer component={Paper} elevation={0}>
+          <Table sx={{ minWidth: 650 }} aria-label="ingredients table">
+            <TableHead sx={{ bgcolor: 'rgba(0, 0, 0, 0.04)' }}>
+              <TableRow>
+                <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>Category</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 600 }}>Status</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 600 }}>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {ingredients.ingredients?.map((item) => (
+                <TableRow
+                  key={item.id}
+                  hover
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    <Typography fontWeight="500">{item.name}</Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Chip 
+                      label={item.category?.name || 'Uncategorized'} 
+                      size="small"
+                      color="secondary"
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Chip
+                      icon={item.inStock ? <CheckCircleIcon /> : <CancelIcon />}
+                      label={item.inStock ? "In Stock" : "Out of Stock"}
+                      color={item.inStock ? "success" : "error"}
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      onClick={() => handleUpdateStock(item.id)}
+                      variant="contained"
+                      size="small"
+                      color={item.inStock ? "success" : "error"}
+                      sx={{ mr: 1 }}
                     >
-                      <TableCell component="th" scope="row">
-                        {item.id}
-                      </TableCell>
-                      <TableCell align="right">{item.name}</TableCell>
-                      <TableCell align="right">{item.category?.name}</TableCell>
-                      <TableCell align="right">
-                        <Button 
-                          onClick={() => handleUpdateStock(item.id)} 
-                          color={item.inStock ? "success" : "error"}
-                          variant="contained"
-                          size="small"
-                        >
-                          {item.inStock ? "In Stock" : "Out of Stock"}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-        </Card>
+                      {item.inStock ? "In Stock" : "Out of Stock"}
+                    </Button>
+                    <IconButton size="small">
+                      <CreateIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Card>
 
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <CreateIngredientForm handleClose={handleClose}/>
-          </Box>
-        </Modal>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" mb={2}>
+            Add New Ingredient
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+          <CreateIngredientForm handleClose={handleClose}/>
+        </Box>
+      </Modal>
     </Box>
   )
 }
 
-export default IngredientsTable;
+export default IngredientsTable

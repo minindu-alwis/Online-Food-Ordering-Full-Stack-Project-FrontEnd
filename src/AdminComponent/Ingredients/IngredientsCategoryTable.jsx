@@ -1,101 +1,119 @@
-import { Box, Card, CardActions, CardHeader, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import React, { useEffect } from 'react'
-import CreateIcon from '@mui/icons-material/Create';
-import { Delete } from '@mui/icons-material';
-import CreateIngredientForm from './CreateIngredientForm';
-import CreateIngredientCategory from './CreateIngredientCategoryForm';
-import CreateIngredientCategoryForm from './CreateIngredientCategoryForm';
-import { useDispatch, useSelector } from 'react-redux';
-import { getIngredientCategory } from '../../component/State/Ingredients/Action';
-
-const orders = [1,1,1,1,1,1,1,1]
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import { 
+  Box, 
+  Card, 
+  CardHeader, 
+  IconButton, 
+  Modal, 
+  Paper, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow,
+  Typography,
+  Avatar,
+  Divider
+} from '@mui/material'
+import CreateIcon from '@mui/icons-material/Create'
+import AddIcon from '@mui/icons-material/Add'
+import CategoryIcon from '@mui/icons-material/Category'
+import CreateIngredientCategoryForm from './CreateIngredientCategoryForm'
+import { useDispatch, useSelector } from 'react-redux'
+import { getIngredientCategory } from '../../component/State/Ingredients/Action'
 
 const IngredientsCategoryTable = () => {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const dispatch = useDispatch();
-  const jwt = localStorage.getItem("jwt");
-  const { restaurant,ingredients } = useSelector((store) => store);
-  const id = restaurant.userRestaurants?.id;
+  const [open, setOpen] = React.useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 4,
+  }
+
+  const dispatch = useDispatch()
+  const jwt = localStorage.getItem("jwt")
+  const { restaurant, ingredients } = useSelector((store) => store)
+  const id = restaurant.userRestaurants?.id
 
   useEffect(() => {
-      if (id && jwt) {  // Only dispatch if id and jwt exist
-          dispatch(getIngredientCategory({ id, jwt })); // Pass as object
-      }
-  }, [id, jwt, dispatch]);
-    
-  
+    if (id && jwt) {
+      dispatch(getIngredientCategory({ id, jwt }))
+    }
+  }, [id, jwt, dispatch])
+
   return (
     <Box>
-        <Card className='mt-1'>
-            <CardHeader
-            action={
-                <IconButton onClick={handleOpen} aria-label="settings">
-                  <CreateIcon />
-                </IconButton>
-              }
-            title={"Ingredients Category"}
-            sx={{pt:2,alignItems:"center"}}
-            />
+      <Card elevation={3} sx={{ borderRadius: 2 }}>
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: 'secondary.main' }}>
+              <CategoryIcon />
+            </Avatar>
+          }
+          action={
+            <IconButton onClick={handleOpen} color="secondary">
+              <AddIcon />
+            </IconButton>
+          }
+          title={<Typography variant="h6" fontWeight="600">Ingredient Categories</Typography>}
+          subheader="Organize your ingredients into categories"
+          sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.12)' }}
+        />
 
+        <TableContainer component={Paper} elevation={0}>
+          <Table aria-label="category table">
+            <TableHead sx={{ bgcolor: 'rgba(0, 0, 0, 0.04)' }}>
+              <TableRow>
+                <TableCell sx={{ fontWeight: 600 }}>Category Name</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 600 }}>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {ingredients.category.map((item) => (
+                <TableRow
+                  key={item.id}
+                  hover
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    <Typography fontWeight="500">{item.name}</Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <IconButton size="small" color="primary">
+                      <CreateIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Card>
 
-<TableContainer component={Paper}>
-      <Table aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="left">Id</TableCell>
-            <TableCell align="left">Name</TableCell>
-            
-            
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {ingredients.category.map((item) => (
-            <TableRow
-              key={item.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {item.id}
-              </TableCell>
-              <TableCell align="left">{item.name}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-
-
-
-                <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-
-            <CreateIngredientCategoryForm/>
-            
-          
-          </Box>
-        </Modal>
-
-        </Card>
-        
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" mb={2}>
+            Add New Category
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+          <CreateIngredientCategoryForm handleClose={handleClose}/>
+        </Box>
+      </Modal>
     </Box>
   )
 }

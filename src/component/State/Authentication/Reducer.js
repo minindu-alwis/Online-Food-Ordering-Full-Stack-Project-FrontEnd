@@ -37,7 +37,7 @@ export const authReducer = (state = initialState, action) => {
                  };     
 
 
-       // In your auth reducer
+       
 case ADD_TO_FAVORITE_SUCCESS:
     return { 
         ...state, 
