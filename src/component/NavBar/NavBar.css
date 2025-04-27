@@ -1,3 +1,93 @@
 li{
     list-style: none;
 }
+
+
+
+/* NavBar.css */
+
+/* Main Navbar Container */
+.sticky {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.95) !important;
+    transition: all 0.3s ease;
+}
+
+.sticky:hover {
+    background-color: rgb(0, 0, 0) !important;
+}
+
+/* Logo Styling */
+.logo {
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    list-style: none;
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.logo:hover {
+    color: white !important;
+    transform: scale(1.05);
+}
+
+.logo::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    transition: width 0.3s ease;
+}
+
+.logo:hover::after {
+    width: 100%;
+}
+
+/* Icon Buttons Styling */
+.MuiIconButton-root {
+    transition: all 0.3s ease !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    padding: 8px !important;
+    margin: 0 5px !important;
+}
+
+.MuiIconButton-root:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px);
+}
+
+/* Avatar Styling */
+.MuiAvatar-root {
+    transition: all 0.3s ease !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.MuiAvatar-root:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+}
+
+/* Badge Styling */
+.MuiBadge-badge {
+    font-weight: bold !important;
+    top: 5px !important;
+    right: 5px !important;
+    background-color: #ff4081 !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .logo {
+        font-size: 1.5rem !important;
+    }
+    
+    .MuiIconButton-root {
+        padding: 6px !important;
+    }
+}

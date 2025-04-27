@@ -7,6 +7,7 @@ import Address from './Address';
 import {Events} from './Events';
 import { Payments } from './Payments';
 import { Favourites } from './Favourites';
+import Notification from './Notification';
 
  
 
@@ -31,6 +32,7 @@ const Profile = () => {
                 <Route path='/favourites' element={<Favourites/>}/>
                 <Route path='/events' element={<Events/>}/>
                 <Route path='/payments' element={<Payments/>}/>
+                <Route path='/notification' element={<Notification/>}/>
 
                 
                 

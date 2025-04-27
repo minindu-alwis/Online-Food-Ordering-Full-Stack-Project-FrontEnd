@@ -1,240 +1,324 @@
-import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material'
-import React from 'react'
-import FacebookIcon from '@mui/icons-material/Facebook';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import InstagramIcon from '@mui/icons-material/Instagram';
+import { 
+  Button, 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  Grid, 
+  Grow, 
+  Fade, 
+  Slide,
+  Avatar,
+  Divider,
+  Chip,
+  IconButton,
+  Tooltip
+} from '@mui/material';
+import {
+  Facebook as FacebookIcon,
+  LinkedIn as LinkedInIcon,
+  Twitter as TwitterIcon,
+  Instagram as InstagramIcon,
+  Restaurant as RestaurantIcon,
+  LocationOn as LocationIcon,
+  Phone as PhoneIcon,
+  Email as EmailIcon,
+  Schedule as ScheduleIcon,
+  Person as PersonIcon,
+  Lock as LockIcon
+} from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateRestaurantStatus } from '../../component/State/Restaurant/Action';
 
-
 const RestaurantDetails = () => {
-
-  const {restaurant} = useSelector((store) => store)
-  console.log("restaurent detaiks",restaurant)
-  const dispatch=useDispatch();
+  const { restaurant } = useSelector((store) => store);
+  const dispatch = useDispatch();
+  
   const handleRestaurantStatus = () => {
     dispatch(updateRestaurantStatus({
-      restaurantId:restaurant.userRestaurants.id,
-      jwt:localStorage.getItem("jwt")
-    }))
-  }
+      restaurantId: restaurant.userRestaurants.id,
+      jwt: localStorage.getItem("jwt")
+    }));
+  };
+
+  const statusColor = restaurant.userRestaurants?.open ? "success" : "error";
+  const statusText = restaurant.userRestaurants?.open ? "OPEN" : "CLOSED";
 
   return (
-    <div className='lg:px-20 px-5 pb-10'>
-      <div className='py- flex justify-center items-center gap-5'>
-
-        <h1 className='text-2xl lg:text-7xl text-center font-bold p-5'>
-          {restaurant.userRestaurants?.name}</h1>
-
-          <div>
-          <Button
-            color={restaurant.userRestaurants?.open ? "error" : "success"}
-            className="py-[1rem] px-[2rem]"
-            variant="contained"
-            onClick={handleRestaurantStatus}
-            size="large"
-          >
-            {restaurant.userRestaurants?.open ? "Close" : "Open"}
-          </Button>
-        </div>
-
-      </div>
-
-      <Grid container spacing={2}>
-
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader title=
-            {<span className='text-gray-300'>Restaurant</span>} />
-            <CardContent>
-              <div className='space-y-4 text-gray-200'>
-
-                <div className='flex'>
-
-                 <p className='w-48'>Owner</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
-                  {restaurant.userRestaurants?.owner.fullName}
-                 </p>
-
-                </div>
-
-
-                 <div className='flex'>
-
-                 <p className='w-48'>Restaurant Name</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
+    <div className='px-4 lg:px-8 py-6 max-w-7xl mx-auto'>
+      {/* Restaurant Header with Status */}
+      <Slide direction="down" in={true} mountOnEnter unmountOnExit>
+        <div className='flex flex-col lg:flex-row items-center justify-between gap-6 mb-8'>
+          <div className='flex items-center gap-4'>
+            <Grow in={true}>
+              <Avatar
+                sx={{
+                  width: 80,
+                  height: 80,
+                  bgcolor: 'primary.main',
+                  boxShadow: 3
+                }}
+              >
+                <RestaurantIcon sx={{ fontSize: 40 }} />
+              </Avatar>
+            </Grow>
+            <div>
+              <Fade in={true} style={{ transitionDelay: '100ms' }}>
+                <h1 className='text-3xl lg:text-5xl font-bold text-gray-800 dark:text-white'>
                   {restaurant.userRestaurants?.name}
-                 </p>
-
+                </h1>
+              </Fade>
+              <Fade in={true} style={{ transitionDelay: '200ms' }}>
+                <div className='flex items-center gap-2 mt-1'>
+                  <Chip
+                    label={statusText}
+                    color={statusColor}
+                    variant="filled"
+                    size="small"
+                    icon={<LockIcon fontSize="small" />}
+                    sx={{ fontWeight: 600 }}
+                  />
+                  <span className='text-sm text-gray-500 dark:text-gray-400'>
+                    {restaurant.userRestaurants?.cuisineType}
+                  </span>
                 </div>
+              </Fade>
+            </div>
+          </div>
+          
+          <Fade in={true} style={{ transitionDelay: '300ms' }}>
+            <Button
+              color={statusColor}
+              variant="contained"
+              onClick={handleRestaurantStatus}
+              size="large"
+              sx={{
+                borderRadius: '12px',
+                px: 4,
+                py: 1.5,
+                fontWeight: 600,
+                textTransform: 'none',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 8px rgba(0, 0, 0, 0.15)'
+                },
+                transition: 'all 0.3s ease'
+              }}
+            >
+              {restaurant.userRestaurants?.open ? "Close Restaurant" : "Open Restaurant"}
+            </Button>
+          </Fade>
+        </div>
+      </Slide>
 
-
-                 <div className='flex'>
-
-                 <p className='w-48'>Cuisine Type</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
-                  {restaurant.userRestaurants?.cuisineType}
-                 </p>
-
+      {/* Main Content Grid */}
+      <Grid container spacing={3}>
+        {/* Restaurant Information Card */}
+        <Grid item xs={12} md={6}>
+          <Grow in={true} style={{ transitionDelay: '200ms' }}>
+            <Card sx={{
+              borderRadius: 3,
+              height: '100%',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05)',
+              border: '1px solid rgba(0, 0, 0, 0.05)',
+              '&:hover': {
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+              },
+              transition: 'all 0.3s ease'
+            }}>
+              <CardHeader 
+                title="Restaurant Details"
+                avatar={<RestaurantIcon color="primary" />}
+                sx={{ 
+                  borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
+                  bgcolor: 'rgba(0, 0, 0, 0.02)'
+                }}
+                titleTypographyProps={{
+                  variant: 'h6',
+                  fontWeight: 600,
+                  color: 'text.primary'
+                }}
+              />
+              <CardContent>
+                <div className='space-y-4'>
+                  <DetailItem 
+                    icon={<PersonIcon color="action" />}
+                    label="Owner"
+                    value={restaurant.userRestaurants?.owner.fullName}
+                  />
+                  <Divider sx={{ my: 1 }} />
+                  <DetailItem 
+                    icon={<RestaurantIcon color="action" />}
+                    label="Restaurant Name"
+                    value={restaurant.userRestaurants?.name}
+                  />
+                  <Divider sx={{ my: 1 }} />
+                  <DetailItem 
+                    icon={<ScheduleIcon color="action" />}
+                    label="Opening Hours"
+                    value={restaurant.userRestaurants?.openingHours || "Not specified"}
+                  />
                 </div>
-
-
-                 <div className='flex'>
-
-                 <p className='w-48'>Opening Hourse</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
-                  {restaurant.userRestaurants?.openingHours}
-                 </p>
-
-                </div>
-
-
-                 <div className='flex'>
-
-                 <p className='w-48'>Status</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
-                    {restaurant.userRestaurants?.open? <span className=
-                     'px-5 py-2 rounded-full bg-green-400 text-gray-950'>Open
-                     </span>:<span className=
-                     'px-5 py-2 rounded-full bg-red-400 text-gray-950'>
-                      Closed
-                     </span>}
-                 </p>
-
-                </div>
-
-              </div>
-            </CardContent>
-
-          </Card>
+              </CardContent>
+            </Card>
+          </Grow>
         </Grid>
 
-
-        <Grid item xs={12} lg={6}>
-          <Card>
-            <CardHeader title=
-            {<span className='text-gray-300'>Address</span>} />
-            <CardContent>
-              <div className='space-y-4 text-gray-200'>
-
-                <div className='flex'>
-
-                 <p className='w-48'>Country</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
-                  {restaurant?.userRestaurants?.address?.streetAddress || "Country not available"}
-                 </p>
-
+        {/* Address Information Card */}
+        <Grid item xs={12} md={6}>
+          <Grow in={true} style={{ transitionDelay: '300ms' }}>
+            <Card sx={{
+              borderRadius: 3,
+              height: '100%',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05)',
+              border: '1px solid rgba(0, 0, 0, 0.05)',
+              '&:hover': {
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+              },
+              transition: 'all 0.3s ease'
+            }}>
+              <CardHeader 
+                title="Address Information"
+                avatar={<LocationIcon color="primary" />}
+                sx={{ 
+                  borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
+                  bgcolor: 'rgba(0, 0, 0, 0.02)'
+                }}
+                titleTypographyProps={{
+                  variant: 'h6',
+                  fontWeight: 600,
+                  color: 'text.primary'
+                }}
+              />
+              <CardContent>
+                <div className='space-y-4'>
+                  <DetailItem 
+                    icon={<LocationIcon color="action" />}
+                    label="Street Address"
+                    value={restaurant?.userRestaurants?.address?.streetAddress || "Not specified"}
+                  />
+                  <Divider sx={{ my: 1 }} />
+                  <DetailItem 
+                    icon={<LocationIcon color="action" />}
+                    label="City"
+                    value={restaurant?.userRestaurants?.address?.city || "Not specified"}
+                  />
+                  <Divider sx={{ my: 1 }} />
+                  <DetailItem 
+                    icon={<LocationIcon color="action" />}
+                    label="Postal Code"
+                    value={restaurant?.userRestaurants?.address?.postalCode || "Not specified"}
+                  />
                 </div>
-
-
-                 <div className='flex'>
-
-                 <p className='w-48'>City</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
-                  {restaurant?.userRestaurants?.address?.city || "City not available"}
-                 </p>
-
-                </div>
-
-
-                 <div className='flex'>
-
-                 <p className='w-48'>Postal Code</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
-                  {restaurant?.userRestaurants?.address?.postalCode || "Postal code not available"}
-                 </p>
-
-                </div>
-
-
-                 <div className='flex'>
-
-                 <p className='w-48'>Street Address</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
-                  {restaurant?.userRestaurants?.address?.streetAddress || "Street not available"}
-                 </p>
-
-                </div>
-
-
-              </div>
-            </CardContent>
-
-          </Card>
+              </CardContent>
+            </Card>
+          </Grow>
         </Grid>
 
-        <Grid item xs={12} lg={6}>
-          <Card>
-            <CardHeader title=
-            {<span className='text-gray-300'>Contact</span>} />
-            <CardContent>
-              <div className='space-y-4 text-gray-200'>
-
-                <div className='flex'>
-
-                 <p className='w-48'>Email</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
-                  {restaurant?.userRestaurants?.contactInformation?.email || "No email"}
-                 </p>
-
-                </div>
-
-
-                 <div className='flex'>
-
-                 <p className='w-48'>Mobile</p>
-                 <p className='text-gray-400'>
-                  <span  className='pr-5'>-</span>
-                  {restaurant?.userRestaurants?.contactInformation?.mobile || "No mobile"}
-                 </p>
-
-                </div>
-
-
-                 <div className='flex'>
-
-                 <p className='w-48'>Social</p>
-                      <div className='flex gap-2 text-gray-400 items-center pb-3'>
-                        <span className='pr-5'>-</span>
-                        <a href={restaurant?.userRestaurants?.contactInformation?.twitter}>
-                          <InstagramIcon sx={{fontSize:"3rem"}}/>
-                        </a>
-
-                        <a href={restaurant?.userRestaurants?.contactInformation?.twitter}>
-                          <TwitterIcon sx={{fontSize:"3rem"}}/>
-                        </a>
-
-                        <a href={restaurant?.userRestaurants?.contactInformation?.twitter}>
-                          <FacebookIcon sx={{fontSize:"3rem"}}/>
-                        </a>
-
-                        <a href={restaurant?.userRestaurants?.contactInformation?.twitter}>
-                          <LinkedInIcon sx={{fontSize:"3rem"}}/>
-                        </a>
+        {/* Contact Information Card */}
+        <Grid item xs={12}>
+          <Grow in={true} style={{ transitionDelay: '400ms' }}>
+            <Card sx={{
+              borderRadius: 3,
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05)',
+              border: '1px solid rgba(0, 0, 0, 0.05)',
+              '&:hover': {
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+              },
+              transition: 'all 0.3s ease'
+            }}>
+              <CardHeader 
+                title="Contact Information"
+                avatar={<PhoneIcon color="primary" />}
+                sx={{ 
+                  borderBottom: '1px solid rgba(0, 0, 0, 0.05)',
+                  bgcolor: 'rgba(0, 0, 0, 0.02)'
+                }}
+                titleTypographyProps={{
+                  variant: 'h6',
+                  fontWeight: 600,
+                  color: 'text.primary'
+                }}
+              />
+              <CardContent>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} md={6}>
+                    <div className='space-y-4'>
+                      <DetailItem 
+                        icon={<EmailIcon color="action" />}
+                        label="Email"
+                        value={restaurant?.userRestaurants?.contactInformation?.email || "Not specified"}
+                      />
+                      <Divider sx={{ my: 1 }} />
+                      <DetailItem 
+                        icon={<PhoneIcon color="action" />}
+                        label="Mobile"
+                        value={restaurant?.userRestaurants?.contactInformation?.mobile || "Not specified"}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <div className='flex flex-col h-full justify-between'>
+                      <div>
+                        <p className='flex items-center text-gray-600 mb-2'>
+                          <LocationIcon color="action" sx={{ mr: 1 }} />
+                          <span className='font-medium'>Social Media</span>
+                        </p>
+                        <Divider sx={{ mb: 2 }} />
                       </div>
-                </div>
-
-              </div>
-            </CardContent>
-
-          </Card>
+                      <div className='flex gap-3 justify-center md:justify-start'>
+                        {[
+                          { icon: <InstagramIcon />, color: "#E1306C", label: "Instagram" },
+                          { icon: <TwitterIcon />, color: "#1DA1F2", label: "Twitter" },
+                          { icon: <FacebookIcon />, color: "#1877F2", label: "Facebook" },
+                          { icon: <LinkedInIcon />, color: "#0077B5", label: "LinkedIn" }
+                        ].map((social, index) => (
+                          <Tooltip key={index} title={social.label} arrow>
+                            <IconButton
+                              sx={{
+                                bgcolor: `${social.color}10`,
+                                color: social.color,
+                                '&:hover': {
+                                  bgcolor: `${social.color}20`,
+                                  transform: 'scale(1.1)'
+                                },
+                                transition: 'all 0.3s ease',
+                                width: 48,
+                                height: 48
+                              }}
+                            >
+                              {social.icon}
+                            </IconButton>
+                          </Tooltip>
+                        ))}
+                      </div>
+                    </div>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grow>
         </Grid>
-
       </Grid>
-
     </div>
-  )
-}
+  );
+};
 
-export default RestaurantDetails
+// Reusable Detail Item Component
+const DetailItem = ({ icon, label, value }) => (
+  <Fade in={true}>
+    <div className='flex items-start'>
+      <div className='mr-3 mt-1'>
+        {icon}
+      </div>
+      <div>
+        <p className='text-sm font-medium text-gray-500'>{label}</p>
+        <p className='text-base font-normal text-gray-800 dark:text-gray-200'>
+          {value}
+        </p>
+      </div>
+    </div>
+  </Fade>
+);
+
+export default RestaurantDetails;
