@@ -1,10 +1,10 @@
-import { 
-    Divider, 
-    FormControl, 
-    FormControlLabel, 
-    Grid, 
-    Radio, 
-    RadioGroup, 
+import {
+    Divider,
+    FormControl,
+    FormControlLabel,
+    Grid,
+    Radio,
+    RadioGroup,
     Typography,
     Box,
     Chip,
@@ -82,28 +82,28 @@ const RestaurantDetails = () => {
     if (loading) {
         return (
             <div className='px-5 lg:px-20 bg-black min-h-screen'>
-                <Skeleton 
-                    variant="text" 
-                    height={60} 
-                    className="mt-10" 
+                <Skeleton
+                    variant="text"
+                    height={60}
+                    className="mt-10"
                     sx={{ bgcolor: 'grey.800' }}
                 />
-                <Skeleton 
-                    variant="rectangular" 
-                    height={300} 
-                    className="mt-5" 
+                <Skeleton
+                    variant="rectangular"
+                    height={300}
+                    className="mt-5"
                     sx={{ bgcolor: 'grey.800' }}
                 />
-                <Skeleton 
-                    variant="text" 
-                    height={40} 
-                    className="mt-5" 
+                <Skeleton
+                    variant="text"
+                    height={40}
+                    className="mt-5"
                     sx={{ bgcolor: 'grey.800' }}
                 />
-                <Skeleton 
-                    variant="text" 
-                    height={20} 
-                    className="mt-2" 
+                <Skeleton
+                    variant="text"
+                    height={20}
+                    className="mt-2"
                     sx={{ bgcolor: 'grey.800' }}
                 />
             </div>
@@ -120,40 +120,81 @@ const RestaurantDetails = () => {
                 <div className='relative z-20 px-5 lg:px-20 pt-10'>
                     {/* Breadcrumb */}
                     <Typography className='text-orange-400 py-2 backdrop-blur-sm bg-gray-900/40 px-4 rounded-full inline-block border border-orange-500/20'>
-                    {restaurant.restaurant?.name}
+                        {restaurant.restaurant?.name}
                     </Typography>
-                    
+
                     {/* Image Gallery */}
                     <div className='mt-6'>
                         <Grid container spacing={3}>
+                            {/* Auto-changing Image Gallery */}
                             <Grid item xs={12}>
-                                <Card className='overflow-hidden shadow-2xl bg-gray-900 border border-orange-500/20'>
-                                    <img 
-                                        className='w-full h-[50vh] object-cover hover:scale-105 transition-transform duration-700 opacity-90 hover:opacity-100' 
-                                        src={restaurant.restaurant?.images[0]}
-                                        alt={restaurant.restaurant?.name}
-                                    />
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} lg={6}>
-                                <Card className='overflow-hidden shadow-xl bg-gray-900 border border-orange-500/20'>
-                                    <img 
-                                        className='w-full h-[35vh] object-cover hover:scale-105 transition-transform duration-500 opacity-90 hover:opacity-100' 
-                                        src={restaurant.restaurant?.images[1] || restaurant.restaurant?.images[0]}
-                                        alt=""
-                                    />
-                                </Card>
-                            </Grid>
-                            <Grid item xs={12} lg={6}>
-                                <Card className='overflow-hidden shadow-xl bg-gray-900 border border-orange-500/20'>
-                                    <img 
-                                        className='w-full h-[35vh] object-cover hover:scale-105 transition-transform duration-500 opacity-90 hover:opacity-100' 
-                                        src={restaurant.restaurant?.images[2] || restaurant.restaurant?.images[0]}
-                                        alt=""
-                                    />
+                                <Card className='overflow-hidden shadow-2xl bg-gray-900 border border-orange-500/20 relative group'>
+                                    {/* Gradient overlay */}
+                                    <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10'></div>
+
+                                    {/* Image info */}
+                                    <div className='absolute bottom-4 left-4 z-20'>
+                                        <div className='bg-black/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-orange-500/30'>
+                                            <Typography className='text-white font-semibold text-lg'>
+                                                {restaurant.restaurant?.name}
+                                            </Typography>
+                                            <Typography className='text-orange-400 text-sm'>
+                                                Gallery View
+                                            </Typography>
+                                        </div>
+                                    </div>
+
+                                    {/* Auto-changing images */}
+                                    <div className='relative w-full h-[50vh] overflow-hidden'>
+                                        {restaurant.restaurant?.images.slice(0, 3).map((img, index) => (
+                                            <img
+                                                key={index}
+                                                className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'
+                                                    }`}
+                                                style={{
+                                                    animation: `fadeInOut 9s infinite ${index * 3}s`
+                                                }}
+                                                src={img}
+                                                alt={`${restaurant.restaurant?.name} - Gallery ${index + 1}`}
+                                            />
+                                        ))}
+                                    </div>
+
+                                    {/* Featured badge */}
+                                    <div className='absolute top-4 right-4 z-20'>
+                                        <div className='bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg'>
+                                            ✨ Gallery
+                                        </div>
+                                    </div>
                                 </Card>
                             </Grid>
                         </Grid>
+
+                        {/* Image counter with active indicator */}
+                        <div className='flex justify-center mt-4 space-x-2'>
+                            {[0, 1, 2].map((index) => (
+                                <div
+                                    key={index}
+                                    className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer transform ${index === 0 ? 'bg-orange-500 scale-125' : 'bg-gray-600'
+                                        }`}
+                                    style={{
+                                        animation: `pulse 3s infinite ${index * 3}s`
+                                    }}
+                                ></div>
+                            ))}
+                        </div>
+
+                        {/* CSS for animations */}
+                        <style jsx>{`
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            16%, 84% { opacity: 1; }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); background-color: #4b5563; }
+            50% { transform: scale(1.25); background-color: #f97316; }
+        }
+    `}</style>
                     </div>
 
                     {/* Restaurant Info Card */}
@@ -170,7 +211,7 @@ const RestaurantDetails = () => {
                                                 {restaurant.restaurant?.name}
                                             </Typography>
                                             <div className='flex items-center gap-2'>
-                                                <Rating value={4.5} readOnly size="small" 
+                                                <Rating value={4.5} readOnly size="small"
                                                     sx={{
                                                         '& .MuiRating-iconFilled': {
                                                             color: '#f59e0b',
@@ -186,7 +227,7 @@ const RestaurantDetails = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <Typography className='text-gray-300 text-lg mb-6 leading-relaxed'>
                                         {restaurant.restaurant?.description}
                                     </Typography>
@@ -202,7 +243,7 @@ const RestaurantDetails = () => {
                                                     </Typography>
                                                 </div>
                                             </div>
-                                            
+
                                             <div className='flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg border border-green-500/20 hover:border-green-500/40 transition-colors'>
                                                 <AccessTimeIcon className='text-green-500' />
                                                 <div>
@@ -213,7 +254,7 @@ const RestaurantDetails = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div className='space-y-4'>
                                             <div className='flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg border border-blue-500/20 hover:border-blue-500/40 transition-colors'>
                                                 <PhoneIcon className='text-blue-500' />
@@ -224,34 +265,34 @@ const RestaurantDetails = () => {
                                                     </Typography>
                                                 </div>
                                             </div>
-                                            
+
                                             <div className='flex gap-2 flex-wrap'>
-                                                <Chip 
-                                                    label="Free Delivery" 
+                                                <Chip
+                                                    label="Free Delivery"
                                                     sx={{
                                                         backgroundColor: '#16a34a',
                                                         color: 'white',
                                                         '&:hover': { backgroundColor: '#15803d' }
                                                     }}
-                                                    size="small" 
+                                                    size="small"
                                                 />
-                                                <Chip 
-                                                    label="30 min" 
+                                                <Chip
+                                                    label="30 min"
                                                     sx={{
                                                         backgroundColor: '#f59e0b',
                                                         color: 'white',
                                                         '&:hover': { backgroundColor: '#d97706' }
                                                     }}
-                                                    size="small" 
+                                                    size="small"
                                                 />
-                                                <Chip 
-                                                    label="₹200 for two" 
+                                                <Chip
+                                                    label="₹200 for two"
                                                     sx={{
                                                         backgroundColor: '#dc2626',
                                                         color: 'white',
                                                         '&:hover': { backgroundColor: '#b91c1c' }
                                                     }}
-                                                    size="small" 
+                                                    size="small"
                                                 />
                                             </div>
                                         </div>
@@ -276,7 +317,7 @@ const RestaurantDetails = () => {
                                         <RestaurantIcon className='text-orange-500' />
                                         Food Type
                                     </Typography>
-                                    
+
                                     <FormControl component="fieldset" className='w-full'>
                                         <RadioGroup onChange={handleFilter} name="food_type" value={foodType}>
                                             {foodTypes.map((item) => (
@@ -284,7 +325,7 @@ const RestaurantDetails = () => {
                                                     <FormControlLabel
                                                         value={item.value}
                                                         control={
-                                                            <Radio 
+                                                            <Radio
                                                                 sx={{
                                                                     color: '#6b7280',
                                                                     '&.Mui-checked': {
@@ -315,18 +356,18 @@ const RestaurantDetails = () => {
                                         <StarIcon className='text-yellow-500' />
                                         Food Category
                                     </Typography>
-                                    
+
                                     <FormControl component="fieldset" className='w-full'>
-                                        <RadioGroup 
-                                            onChange={handleFilterCategory} 
-                                            name="food_category" 
+                                        <RadioGroup
+                                            onChange={handleFilterCategory}
+                                            name="food_category"
                                             value={selectedCategory}
                                         >
                                             <div className='mb-2'>
                                                 <FormControlLabel
                                                     value=""
                                                     control={
-                                                        <Radio 
+                                                        <Radio
                                                             sx={{
                                                                 color: '#6b7280',
                                                                 '&.Mui-checked': {
@@ -344,7 +385,7 @@ const RestaurantDetails = () => {
                                                     <FormControlLabel
                                                         value={item.name}
                                                         control={
-                                                            <Radio 
+                                                            <Radio
                                                                 sx={{
                                                                     color: '#6b7280',
                                                                     '&.Mui-checked': {
@@ -375,7 +416,7 @@ const RestaurantDetails = () => {
                                 {menu.menuItems?.length || 0} items available
                             </Typography>
                         </div>
-                        
+
                         <div className='grid gap-6'>
                             {menu.menuItems?.length > 0 ? (
                                 menu.menuItems.map((item, index) => (
