@@ -2,7 +2,6 @@ import { Divider, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typogr
 import React, { useEffect, useState } from 'react'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import { Label } from '@mui/icons-material';
 import MenuCard from './MenuCard';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -71,7 +70,7 @@ const RestaurantDetails = () => {
         <div className='px-5 lg:px-20'>
 
             <section>
-                <h3 className='text-gray-500 py-2 mt-10'>Home/india/indian fast food/3 </h3>
+                <h3 className='text-gray-500 py-2 mt-10'>{restaurant.restaurant?.name}</h3>
                 <div>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
@@ -112,7 +111,7 @@ const RestaurantDetails = () => {
 
                        <LocationOnIcon/>
                         <span>
-                       Mumbat , maharastarts
+                       {restaurant.restaurant?.address?.streetAddress}, {restaurant.restaurant?.address?.city} , {restaurant.restaurant?.address?.stateProvince} - {restaurant.restaurant?.address?.country}
                         </span> 
                         </p>
 
