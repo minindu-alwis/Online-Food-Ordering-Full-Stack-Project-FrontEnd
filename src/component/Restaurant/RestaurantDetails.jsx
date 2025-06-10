@@ -1,205 +1,402 @@
-import { Divider, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typography } from '@mui/material'
+import { 
+    Divider, 
+    FormControl, 
+    FormControlLabel, 
+    Grid, 
+    Radio, 
+    RadioGroup, 
+    Typography,
+    Box,
+    Chip,
+    Card,
+    CardContent,
+    Avatar,
+    Rating,
+    Button,
+    Skeleton
+} from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import PhoneIcon from '@mui/icons-material/Phone';
+import StarIcon from '@mui/icons-material/Star';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import MenuCard from './MenuCard';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRestaurantById, getRestaurantsCategory } from '../State/Restaurant/Action';
 import { getMenuItemsByRestaurantId } from '../State/Menu/Action';
 
-
-
-
-const foodTypes=[
-    {Label:"All",value:"all"},
-    {Label:"Vegitarian only",value:"vegitarian"},
-    {Label:"Non-Vegitarian",value:"non_vegitarian"},
-    {Label:"Seasonal",value:"seasonal"}
+const foodTypes = [
+    { Label: "All Items", value: "all", icon: "🍽️" },
+    { Label: "Vegetarian Only", value: "vegitarian", icon: "🥗" },
+    { Label: "Non-Vegetarian", value: "non_vegitarian", icon: "🍖" },
+    { Label: "Seasonal Specials", value: "seasonal", icon: "🌟" }
 ]
 
-const menu=[1,1,1,1,1,1,1]
-
 const RestaurantDetails = () => {
-
-    
-
-    const [foodType,setFoodType]=useState("all");
+    const [foodType, setFoodType] = useState("all");
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const jwt = localStorage.getItem('jwt');
-    const { auth,restaurant,menu } = useSelector((store) => store);
-    const [selectedCategory,setSelectedCategory]=useState("")
+    const { auth, restaurant, menu } = useSelector((store) => store);
+    const { id, city } = useParams();
 
-
-    const {id,city}=useParams();  
-
-    const handleFilter=(e)=>{
+    const handleFilter = (e) => {
         setFoodType(e.target.value)
-        console.log(e.target.value,e.target.name)
+        console.log(e.target.value, e.target.name)
     }
 
-
-    const handleFilterCategory=(e,value)=>{
+    const handleFilterCategory = (e, value) => {
         setSelectedCategory(value)
-        console.log(e.target.value,e.target.name,value)
+        console.log(e.target.value, e.target.name, value)
     }
 
-    console.log("restaurant",restaurant);
+    console.log("restaurant", restaurant);
 
-    useEffect(()=>{
-        dispatch(getRestaurantById({jwt,restaurantId:id}))
-        dispatch(getRestaurantsCategory({jwt,restaurantId:id}))
-       
-          
-    },[])
-    
-    useEffect(()=>{
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            await dispatch(getRestaurantById({ jwt, restaurantId: id }))
+            await dispatch(getRestaurantsCategory({ jwt, restaurantId: id }))
+            setLoading(false);
+        }
+        fetchData();
+    }, [])
+
+    useEffect(() => {
         dispatch(getMenuItemsByRestaurantId({
             jwt,
             restaurantId: id,
-            vagetarian: foodType==="vegitarian",   // 👈 match the backend spelling
-            nonveg: foodType==="non_vegitarian",
-            seasonal: foodType==="seasonal",
+            vagetarian: foodType === "vegitarian",
+            nonveg: foodType === "non_vegitarian",
+            seasonal: foodType === "seasonal",
             foodCategory: selectedCategory,
-          }));
-    },[selectedCategory,foodType])    
+        }));
+    }, [selectedCategory, foodType])
+
+    if (loading) {
+        return (
+            <div className='px-5 lg:px-20 bg-black min-h-screen'>
+                <Skeleton 
+                    variant="text" 
+                    height={60} 
+                    className="mt-10" 
+                    sx={{ bgcolor: 'grey.800' }}
+                />
+                <Skeleton 
+                    variant="rectangular" 
+                    height={300} 
+                    className="mt-5" 
+                    sx={{ bgcolor: 'grey.800' }}
+                />
+                <Skeleton 
+                    variant="text" 
+                    height={40} 
+                    className="mt-5" 
+                    sx={{ bgcolor: 'grey.800' }}
+                />
+                <Skeleton 
+                    variant="text" 
+                    height={20} 
+                    className="mt-2" 
+                    sx={{ bgcolor: 'grey.800' }}
+                />
+            </div>
+        );
+    }
 
     return (
-        <div className='px-5 lg:px-20'>
+        <div className='min-h-screen bg-black'>
+            {/* Hero Section */}
+            <section className='relative'>
+                {/* Background with overlay */}
+                <div className='absolute inset-0 bg-black'></div>
 
-            <section>
-                <h3 className='text-gray-500 py-2 mt-10'>{restaurant.restaurant?.name}</h3>
-                <div>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <img className='w-full h-[40vh] object-cover' src=
-                            {restaurant.restaurant?.images[0]}
-                                alt="" />
-                        </Grid>
-
-                        <Grid item xs={12} lg={6}>
-                            <img className='w-full h-[40vh] object-cover' src=
-                            
-                            {restaurant.restaurant?.images[0]}
-                                alt="" />
-                        </Grid>
-
-
-                        <Grid item xs={12} lg={6}>
-                            <img className='w-full h-[40vh] object-cover' src=
-                            {restaurant.restaurant?.images[2]}  
-                                alt="" />
-                        </Grid>
-
-
-                    </Grid>
-                </div>
-
-                <div className='pt-3 pb-5'>
-                    <h1 className='text-4xl font-semibold'>{restaurant.restaurant?.name}</h1>
+                <div className='relative z-20 px-5 lg:px-20 pt-10'>
+                    {/* Breadcrumb */}
+                    <Typography className='text-orange-400 py-2 backdrop-blur-sm bg-gray-900/40 px-4 rounded-full inline-block border border-orange-500/20'>
+                    {restaurant.restaurant?.name}
+                    </Typography>
                     
-                    <p className='text-gray-500 mt-1'>
-                        {restaurant.restaurant?.description}
-                    </p>
-
-
-                    <div className='space-y-3 mt-3'>
-                    <p className='text-gray-500 flex items-center gap-3'>
-                       
-
-                       <LocationOnIcon/>
-                        <span>
-                       {restaurant.restaurant?.address?.streetAddress}, {restaurant.restaurant?.address?.city} , {restaurant.restaurant?.address?.stateProvince} - {restaurant.restaurant?.address?.country}
-                        </span> 
-                        </p>
-
-
-                        <p className='text-gray-500 flex items-center gap-3'>
-                       
-
-                       <CalendarMonthIcon/>
-                        <span>
-                            {restaurant.restaurant?.openingHours}
-                        </span> 
-                        </p>
-
+                    {/* Image Gallery */}
+                    <div className='mt-6'>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <Card className='overflow-hidden shadow-2xl bg-gray-900 border border-orange-500/20'>
+                                    <img 
+                                        className='w-full h-[50vh] object-cover hover:scale-105 transition-transform duration-700 opacity-90 hover:opacity-100' 
+                                        src={restaurant.restaurant?.images[0]}
+                                        alt={restaurant.restaurant?.name}
+                                    />
+                                </Card>
+                            </Grid>
+                            <Grid item xs={12} lg={6}>
+                                <Card className='overflow-hidden shadow-xl bg-gray-900 border border-orange-500/20'>
+                                    <img 
+                                        className='w-full h-[35vh] object-cover hover:scale-105 transition-transform duration-500 opacity-90 hover:opacity-100' 
+                                        src={restaurant.restaurant?.images[1] || restaurant.restaurant?.images[0]}
+                                        alt=""
+                                    />
+                                </Card>
+                            </Grid>
+                            <Grid item xs={12} lg={6}>
+                                <Card className='overflow-hidden shadow-xl bg-gray-900 border border-orange-500/20'>
+                                    <img 
+                                        className='w-full h-[35vh] object-cover hover:scale-105 transition-transform duration-500 opacity-90 hover:opacity-100' 
+                                        src={restaurant.restaurant?.images[2] || restaurant.restaurant?.images[0]}
+                                        alt=""
+                                    />
+                                </Card>
+                            </Grid>
+                        </Grid>
                     </div>
-                    
 
-                
-                
+                    {/* Restaurant Info Card */}
+                    <Card className='mt-8 shadow-2xl bg-gray-900/95 backdrop-blur-sm border border-orange-500/20'>
+                        <CardContent className='p-8'>
+                            <div className='flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6'>
+                                <div className='flex-1'>
+                                    <div className='flex items-center gap-4 mb-4'>
+                                        <Avatar className='bg-gradient-to-r from-orange-500 to-red-600 w-16 h-16 shadow-lg'>
+                                            <RestaurantIcon className='text-2xl' />
+                                        </Avatar>
+                                        <div>
+                                            <Typography variant='h3' className='font-bold text-white mb-2'>
+                                                {restaurant.restaurant?.name}
+                                            </Typography>
+                                            <div className='flex items-center gap-2'>
+                                                <Rating value={4.5} readOnly size="small" 
+                                                    sx={{
+                                                        '& .MuiRating-iconFilled': {
+                                                            color: '#f59e0b',
+                                                        },
+                                                        '& .MuiRating-iconEmpty': {
+                                                            color: '#374151',
+                                                        }
+                                                    }}
+                                                />
+                                                <Typography className='text-gray-300'>
+                                                    4.5 (250+ reviews)
+                                                </Typography>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <Typography className='text-gray-300 text-lg mb-6 leading-relaxed'>
+                                        {restaurant.restaurant?.description}
+                                    </Typography>
+
+                                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                                        <div className='space-y-4'>
+                                            <div className='flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg border border-orange-500/20 hover:border-orange-500/40 transition-colors'>
+                                                <LocationOnIcon className='text-orange-500' />
+                                                <div>
+                                                    <Typography className='font-medium text-white'>Location</Typography>
+                                                    <Typography className='text-gray-400 text-sm'>
+                                                        {restaurant.restaurant?.address?.streetAddress}, {restaurant.restaurant?.address?.city}, {restaurant.restaurant?.address?.stateProvince} - {restaurant.restaurant?.address?.country}
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className='flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg border border-green-500/20 hover:border-green-500/40 transition-colors'>
+                                                <AccessTimeIcon className='text-green-500' />
+                                                <div>
+                                                    <Typography className='font-medium text-white'>Opening Hours</Typography>
+                                                    <Typography className='text-gray-400 text-sm'>
+                                                        {restaurant.restaurant?.openingHours}
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className='space-y-4'>
+                                            <div className='flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg border border-blue-500/20 hover:border-blue-500/40 transition-colors'>
+                                                <PhoneIcon className='text-blue-500' />
+                                                <div>
+                                                    <Typography className='font-medium text-white'>Contact</Typography>
+                                                    <Typography className='text-gray-400 text-sm'>
+                                                        +1 (555) 123-4567
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className='flex gap-2 flex-wrap'>
+                                                <Chip 
+                                                    label="Free Delivery" 
+                                                    sx={{
+                                                        backgroundColor: '#16a34a',
+                                                        color: 'white',
+                                                        '&:hover': { backgroundColor: '#15803d' }
+                                                    }}
+                                                    size="small" 
+                                                />
+                                                <Chip 
+                                                    label="30 min" 
+                                                    sx={{
+                                                        backgroundColor: '#f59e0b',
+                                                        color: 'white',
+                                                        '&:hover': { backgroundColor: '#d97706' }
+                                                    }}
+                                                    size="small" 
+                                                />
+                                                <Chip 
+                                                    label="₹200 for two" 
+                                                    sx={{
+                                                        backgroundColor: '#dc2626',
+                                                        color: 'white',
+                                                        '&:hover': { backgroundColor: '#b91c1c' }
+                                                    }}
+                                                    size="small" 
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </section>
 
+            {/* Menu Section */}
+            <section className='pt-12 px-5 lg:px-20'>
+                <div className='lg:flex gap-8'>
+                    {/* Filter Sidebar */}
+                    <div className='lg:w-[25%] mb-8 lg:mb-0'>
+                        <Card className='sticky top-24 shadow-2xl bg-gray-900 border border-orange-500/20'>
+                            <CardContent className='p-6'>
+                                {/* Food Type Filter */}
+                                <div className='mb-8'>
+                                    <Typography variant='h5' className='font-bold text-white mb-4 flex items-center gap-2'>
+                                        <RestaurantIcon className='text-orange-500' />
+                                        Food Type
+                                    </Typography>
+                                    
+                                    <FormControl component="fieldset" className='w-full'>
+                                        <RadioGroup onChange={handleFilter} name="food_type" value={foodType}>
+                                            {foodTypes.map((item) => (
+                                                <div key={item.value} className='mb-2'>
+                                                    <FormControlLabel
+                                                        value={item.value}
+                                                        control={
+                                                            <Radio 
+                                                                sx={{
+                                                                    color: '#6b7280',
+                                                                    '&.Mui-checked': {
+                                                                        color: '#f59e0b',
+                                                                    },
+                                                                }}
+                                                            />
+                                                        }
+                                                        label={
+                                                            <div className='flex items-center gap-2'>
+                                                                <span className='text-lg'>{item.icon}</span>
+                                                                <span className='font-medium text-gray-200'>{item.Label}</span>
+                                                            </div>
+                                                        }
+                                                        className='hover:bg-gray-800/50 rounded-lg p-2 transition-colors border border-transparent hover:border-orange-500/20'
+                                                    />
+                                                </div>
+                                            ))}
+                                        </RadioGroup>
+                                    </FormControl>
+                                </div>
 
+                                <Divider className='my-6' sx={{ borderColor: '#374151' }} />
 
-
-        <Divider/>
-        <section className='pt-[2rem] lg:flex relative'>
-
-            <div className='space-y-10 lg:w-[20%] filter'>
-                
-                <div className='box space-y-5 lg:sticky top-28  p-5 shadow-md'>
-                   
-                   <div>
-                        <Typography variant='h5' sx={{paddingBottom:"1rem"}}>
-                            Food Type
-                        </Typography>
-
-                        <FormControl className='py-10 space-y-5' component={"fieldset"}>
-                            <RadioGroup onChange={handleFilter} name="food_type" value={foodType}>
-                                {foodTypes.map((item)=>( 
-                                    <FormControlLabel
-                                    key={item.value}
-                                 value={item.value}
-                                  control={<Radio />}
-                                   label={item.Label} />))}
-                            </RadioGroup>
-                        </FormControl>
-
-
+                                {/* Category Filter */}
+                                <div>
+                                    <Typography variant='h5' className='font-bold text-white mb-4 flex items-center gap-2'>
+                                        <StarIcon className='text-yellow-500' />
+                                        Food Category
+                                    </Typography>
+                                    
+                                    <FormControl component="fieldset" className='w-full'>
+                                        <RadioGroup 
+                                            onChange={handleFilterCategory} 
+                                            name="food_category" 
+                                            value={selectedCategory}
+                                        >
+                                            <div className='mb-2'>
+                                                <FormControlLabel
+                                                    value=""
+                                                    control={
+                                                        <Radio 
+                                                            sx={{
+                                                                color: '#6b7280',
+                                                                '&.Mui-checked': {
+                                                                    color: '#f59e0b',
+                                                                },
+                                                            }}
+                                                        />
+                                                    }
+                                                    label={<span className='font-medium text-gray-200'>All Categories</span>}
+                                                    className='hover:bg-gray-800/50 rounded-lg p-2 transition-colors border border-transparent hover:border-orange-500/20'
+                                                />
+                                            </div>
+                                            {restaurant.categories?.map((item) => (
+                                                <div key={item.name} className='mb-2'>
+                                                    <FormControlLabel
+                                                        value={item.name}
+                                                        control={
+                                                            <Radio 
+                                                                sx={{
+                                                                    color: '#6b7280',
+                                                                    '&.Mui-checked': {
+                                                                        color: '#f59e0b',
+                                                                    },
+                                                                }}
+                                                            />
+                                                        }
+                                                        label={<span className='font-medium text-gray-200'>{item.name}</span>}
+                                                        className='hover:bg-gray-800/50 rounded-lg p-2 transition-colors border border-transparent hover:border-orange-500/20'
+                                                    />
+                                                </div>
+                                            ))}
+                                        </RadioGroup>
+                                    </FormControl>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
-                    <Divider/>
-                    <div>
-                        <Typography variant='h5' sx={{paddingBottom:"1rem"}}>
-                            Food Category
-                        </Typography>
 
-                        <FormControl className='py-10 space-y-5' component={"fieldset"}>
-                            <RadioGroup onChange={handleFilterCategory} name="food_category" 
-                            value={selectedCategory}
-                            
-                            >
-                                {restaurant.categories.map((item)=>( 
-                                    <FormControlLabel
-                                    key={item}
-                                 value={item.name}
-                                  control={<Radio />}
-                                   label={item.name} />))}
-                            </RadioGroup>
-                        </FormControl>
-
-
+                    {/* Menu Items */}
+                    <div className='lg:w-[75%]'>
+                        <div className='mb-6'>
+                            <Typography variant='h4' className='font-bold text-white mb-2'>
+                                Our Menu
+                            </Typography>
+                            <Typography className='text-gray-400'>
+                                {menu.menuItems?.length || 0} items available
+                            </Typography>
+                        </div>
+                        
+                        <div className='grid gap-6'>
+                            {menu.menuItems?.length > 0 ? (
+                                menu.menuItems.map((item, index) => (
+                                    <div key={index} className='transform hover:scale-[1.02] transition-transform duration-300'>
+                                        <MenuCard item={item} />
+                                    </div>
+                                ))
+                            ) : (
+                                <Card className='p-8 text-center bg-gray-900 border border-gray-700'>
+                                    <Typography variant='h6' className='text-gray-400 mb-2'>
+                                        No items found
+                                    </Typography>
+                                    <Typography className='text-gray-500'>
+                                        Try adjusting your filters to see more options
+                                    </Typography>
+                                </Card>
+                            )}
+                        </div>
                     </div>
-
-
-               
-               
-                
                 </div>
-            </div>
-
-
-            <div className='space-y-5 lg:w-[80%] lg:pl-10'>
-
-                {menu.menuItems.map((item)=><MenuCard item={item}/>)}
-
-            </div>
-
-        </section>
-
+            </section>
         </div>
     )
 }
